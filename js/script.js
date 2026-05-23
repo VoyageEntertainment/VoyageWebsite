@@ -26,7 +26,7 @@ if (canvas) {
     initGrid();
   });
 
-  const iconSize  = 170;
+  const iconSize  = 200;
   const spacingX  = 280;
   const scaleY    = 0.65;
   const spacingY  = Math.round(280 / scaleY);
