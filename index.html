@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Voyage Entertainment — Top Roblox game studio. We build, grow, and acquire Roblox games played by millions." />
+  <title>Voyage Entertainment</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <nav class="nav" id="nav">
+    <a href="#" class="nav-logo">
+      <svg width="40" height="35" viewBox="0 0 36 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M18 2 L18 18" stroke="white" stroke-width="2" stroke-linecap="round"/>
+        <path d="M18 3 L28 13 L18 13 Z" fill="white"/>
+        <path d="M4 20 Q18 14 32 20 L28 26 Q18 24 8 26 Z" fill="white"/>
+        <path d="M2 22 Q18 16 34 22" stroke="white" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+      </svg>
+      VOYAGE
+    </a>
+    <ul class="nav-links">
+      <li><a href="#games">Games</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#acquisition">Acquisition</a></li>
+      <li><a href="#assistant">Research</a></li>
+      <li><a href="#contact" class="nav-cta">Contact Us</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="Menu" aria-expanded="false" aria-controls="mobileMenu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <nav class="mobile-menu" id="mobileMenu" aria-label="Mobile Navigation">
+    <a href="#games"       onclick="closeMenu()">Games</a>
+    <a href="#about"       onclick="closeMenu()">About</a>
+    <a href="#acquisition" onclick="closeMenu()">Acquisition</a>
+    <a href="#assistant"   onclick="closeMenu()">Research</a>
+    <a href="#contact"     onclick="closeMenu()">Contact Us</a>
+  </nav>
+
+  <!-- ===== HERO ===== -->
+  <section class="hero">
+    <canvas id="heroCanvas"></canvas>
+    <div class="hero-glow hero-glow--1"></div>
+    <div class="hero-glow hero-glow--2"></div>
+    <div class="grid-overlay"></div>
+
+    <div class="hero-inner animate-reveal">
+      <div class="hero-badge">Top Roblox Studio</div>
+      <h1 class="hero-title">We build games<br><span>players love.</span></h1>
+      <p class="hero-sub">Voyage Entertainment is a Roblox studio behind some of the platform's most played experiences. From zero to trending — we know the way.</p>
+      <div class="hero-btns">
+        <a href="#games" class="btn-primary">View Our Games</a>
+        <a href="mailto:voyagenoirtype@gmail.com" class="btn-secondary">Get in Touch</a>
+      </div>
+    </div>
+
+    <div class="hero-stats-bar animate-reveal">
+      <div class="hero-stat">
+        <span class="hero-stat-num">56M+</span>
+        <span class="hero-stat-label">Total Plays</span>
+      </div>
+      <div class="hero-stat-divider"></div>
+      <div class="hero-stat">
+        <span class="hero-stat-num">4</span>
+        <span class="hero-stat-label">Live Games</span>
+      </div>
+      <div class="hero-stat-divider"></div>
+      <div class="hero-stat">
+        <span class="hero-stat-num">96%+</span>
+        <span class="hero-stat-label">Avg Rating</span>
+      </div>
+      <div class="hero-stat-divider"></div>
+      <div class="hero-stat">
+        <span class="hero-stat-num">2.4M+</span>
+        <span class="hero-stat-label">Favorites</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== GAMES ===== -->
+  <section class="section" id="games">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-label">Portfolio</span>
+        <h2 class="section-title">Our Games</h2>
+        <p class="section-sub">Experiences built by Voyage Entertainment, played by millions on Roblox.</p>
+      </div>
+
+      <div class="games-grid">
+        <a href="https://www.roblox.com/games/117782023218098/Kick-a-Brainrot" target="_blank" class="game-card animate-reveal">
+          <div class="game-card-icon">
+            <img src="img/kick-a-brainrot.png" alt="Kick a Brainrot" width="120" height="120" loading="lazy" />
+          </div>
+          <div class="game-card-body">
+            <div class="game-card-top">
+              <h3>Kick a Brainrot</h3>
+              <span class="game-badge">Simulator</span>
+            </div>
+            <p class="game-description">Hatch eggs, collect Brainrots and kick them to trigger mutations. Over 100 unique characters to discover.</p>
+            <div class="game-stats">
+              <div class="game-stat"><span class="gs-num">52M</span><span class="gs-label">Plays</span></div>
+              <div class="game-stat"><span class="gs-num">98%</span><span class="gs-label">Rating</span></div>
+              <div class="game-stat"><span class="gs-num">2M</span><span class="gs-label">Favorites</span></div>
+            </div>
+          </div>
+          <div class="game-card-arrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </a>
+
+        <a href="https://www.roblox.com/games/95275361430060/Steal-a-Mob" target="_blank" class="game-card animate-reveal">
+          <div class="game-card-icon">
+            <img src="img/steal-a-mob.png" alt="Steal a Mob" width="120" height="120" loading="lazy" />
+          </div>
+          <div class="game-card-body">
+            <div class="game-card-top">
+              <h3>Steal a Mob</h3>
+              <span class="game-badge">Simulator</span>
+            </div>
+            <p class="game-description">Buy mobs, steal from other players and generate money. Rebirth for upgrades and troll your enemies.</p>
+            <div class="game-stats">
+              <div class="game-stat"><span class="gs-num">2.3M</span><span class="gs-label">Plays</span></div>
+              <div class="game-stat"><span class="gs-num">96%</span><span class="gs-label">Rating</span></div>
+              <div class="game-stat"><span class="gs-num">178K</span><span class="gs-label">Favorites</span></div>
+            </div>
+          </div>
+          <div class="game-card-arrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </a>
+
+        <a href="https://www.roblox.com/games/119749960243257/Brainrot-Balloon" target="_blank" class="game-card animate-reveal">
+          <div class="game-card-icon">
+            <img src="img/brainrot-balloon.png" alt="Brainrot Balloon" width="120" height="120" loading="lazy" />
+          </div>
+          <div class="game-card-body">
+            <div class="game-card-top">
+              <h3>Brainrot Balloon</h3>
+              <span class="game-badge">Simulator</span>
+            </div>
+            <p class="game-description">Pop balloons, collect Brainrots and find mutations. Over 100 unique characters to discover.</p>
+            <div class="game-stats">
+              <div class="game-stat"><span class="gs-num">2.1M</span><span class="gs-label">Plays</span></div>
+              <div class="game-stat"><span class="gs-num">94%</span><span class="gs-label">Rating</span></div>
+              <div class="game-stat"><span class="gs-num">221K</span><span class="gs-label">Favorites</span></div>
+            </div>
+          </div>
+          <div class="game-card-arrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </a>
+
+        <a href="https://www.roblox.com/games/103134341448025/Grow-Trees-For-Brainrots" target="_blank" class="game-card animate-reveal">
+          <div class="game-card-icon">
+            <img src="img/grow-trees.png" alt="Grow Trees for Brainrots" width="120" height="120" loading="lazy" />
+          </div>
+          <div class="game-card-body">
+            <div class="game-card-top">
+              <h3>Grow Trees for Brainrots</h3>
+              <span class="game-badge">Simulator</span>
+            </div>
+            <p class="game-description">Plant trees, collect Brainrots and earn cash offline. An addictive idle experience with endless progression.</p>
+            <div class="game-stats">
+              <div class="game-stat"><span class="gs-num">128K</span><span class="gs-label">Plays</span></div>
+              <div class="game-stat"><span class="gs-num">94%</span><span class="gs-label">Rating</span></div>
+              <div class="game-stat"><span class="gs-num">12.4K</span><span class="gs-label">Favorites</span></div>
+            </div>
+          </div>
+          <div class="game-card-arrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== ABOUT ===== -->
+  <section class="section section--dark" id="about">
+    <div class="container">
+      <div class="about-grid">
+        <div class="about-left">
+          <span class="section-label">About Us</span>
+          <h2 class="section-title">Built to make<br>hits, not games.</h2>
+          <p>Voyage Entertainment is a Roblox studio obsessed with building experiences players return to every single day. We combine sharp game design with data-driven growth strategies.</p>
+          <p>From simulators to idle games, we've shipped titles across every major Roblox genre — and we know exactly what it takes to go from zero to trending.</p>
+          <a href="mailto:voyagenoirtype@gmail.com" class="btn-primary" style="margin-top:8px">Join Our Team</a>
+        </div>
+        <div class="about-right">
+          <div class="about-features">
+            <div class="feature animate-reveal">
+              <div class="feature-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+              </div>
+              <div>
+                <h4>Data-Driven Growth</h4>
+                <p>Every decision is backed by analytics and player behavior data.</p>
+              </div>
+            </div>
+            <div class="feature animate-reveal">
+              <div class="feature-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+              </div>
+              <div>
+                <h4>Fast Iteration</h4>
+                <p>Rapid updates and live events that keep players engaged long-term.</p>
+              </div>
+            </div>
+            <div class="feature animate-reveal">
+              <div class="feature-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              </div>
+              <div>
+                <h4>Global Community</h4>
+                <p>Millions of players across all platforms and regions.</p>
+              </div>
+            </div>
+            <div class="feature animate-reveal">
+              <div class="feature-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+              </div>
+              <div>
+                <h4>Expert Monetization</h4>
+                <p>Proven systems that maximize revenue without hurting player experience.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== ACQUISITION ===== -->
+  <section class="section" id="acquisition">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-label">Game Acquisition</span>
+        <h2 class="section-title">Ready to exit?</h2>
+        <p class="section-sub">We acquire Roblox games and scale them to their full potential. Here's how it works.</p>
+      </div>
+
+      <div class="steps">
+        <div class="step animate-reveal">
+          <div class="step-num">01</div>
+          <div class="step-body">
+            <h3>Full Acquisition</h3>
+            <p>We purchase your Roblox game outright, offering a competitive upfront payment based on your metrics.</p>
+          </div>
+        </div>
+        <div class="step animate-reveal">
+          <div class="step-num">02</div>
+          <div class="step-body">
+            <h3>Expert Development</h3>
+            <p>Our in-house team takes over development, marketing, and ongoing optimization to grow the game.</p>
+          </div>
+        </div>
+        <div class="step animate-reveal">
+          <div class="step-num">03</div>
+          <div class="step-body">
+            <h3>Revenue Sharing</h3>
+            <p>Keep benefiting from the game's success through a transparent and fair revenue-sharing model.</p>
+          </div>
+        </div>
+        <div class="step animate-reveal">
+          <div class="step-num">04</div>
+          <div class="step-body">
+            <h3>Hassle-Free Transition</h3>
+            <p>We handle everything from the handover to future management. You focus on building your next idea.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CONTACT ===== -->
+  <section class="section" id="contact">
+    <div class="container">
+      <div class="contact-wrap">
+        <div class="contact-left">
+          <span class="section-label">Contact</span>
+          <h2 class="section-title">Let's talk.</h2>
+          <p>Whether you want to sell your game or just have a question — send us a message and we'll get back to you fast.</p>
+          <a href="mailto:voyagenoirtype@gmail.com" class="contact-email">voyagenoirtype@gmail.com</a>
+        </div>
+        <div class="contact-right">
+          <form class="contact-form" id="contactForm">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="nameInput">Your Name</label>
+                <input type="text" id="nameInput" name="name" placeholder="John Doe" required />
+              </div>
+              <div class="form-group">
+                <label for="emailInput">Your Email</label>
+                <input type="email" id="emailInput" name="email" placeholder="john@example.com" required />
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="linkInput">Roblox Game Link</label>
+              <input type="url" id="linkInput" name="game_link" placeholder="https://www.roblox.com/games/..." />
+            </div>
+            <div class="form-group">
+              <label for="msgInput">Message</label>
+              <textarea id="msgInput" name="message" placeholder="Tell us about your game — monthly players, revenue, genre..." rows="5"></textarea>
+            </div>
+            <label class="checkbox-label" for="ageCheckbox">
+              <input type="checkbox" id="ageCheckbox" required />
+              <span>I confirm I am over 13 years old</span>
+            </label>
+            <button type="submit" class="btn-primary btn-full">Send Message</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <a href="#" class="nav-logo footer-logo">
+          <svg width="24" height="20" viewBox="0 0 36 28" fill="none">
+            <path d="M18 2 L18 18" stroke="white" stroke-width="2" stroke-linecap="round"/>
+            <path d="M18 3 L28 13 L18 13 Z" fill="white"/>
+            <path d="M4 20 Q18 14 32 20 L28 26 Q18 24 8 26 Z" fill="white"/>
+            <path d="M2 22 Q18 16 34 22" stroke="white" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+          </svg>
+          VOYAGE
+        </a>
+        <p>Top Roblox studio building experiences played by millions.</p>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <h4>Studio</h4>
+          <a href="#about">About Us</a>
+          <a href="mailto:voyagenoirtype@gmail.com">Careers</a>
+          <a href="mailto:voyagenoirtype@gmail.com">Contact</a>
+        </div>
+        <div class="footer-col">
+          <h4>Services</h4>
+          <a href="#acquisition">Game Acquisition</a>
+          <a href="#games">Our Games</a>
+        </div>
+        <div class="footer-col">
+          <h4>Legal</h4>
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container">
+        <p>© 2026 Voyage Entertainment. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/script.js"></script>
+</body>
+</html>
