@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="All games by Voyage Interactive — Roblox experiences played by millions." />
+  <title>Our Games — Voyage Interactive</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/games.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- ===== NAV ===== -->
+  <nav class="nav" id="nav">
+    <a href="index.html" class="nav-logo">
+      <svg width="40" height="35" viewBox="0 0 36 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M18 2 L18 18" stroke="white" stroke-width="2" stroke-linecap="round"/>
+        <path d="M18 3 L28 13 L18 13 Z" fill="white"/>
+        <path d="M4 20 Q18 14 32 20 L28 26 Q18 24 8 26 Z" fill="white"/>
+        <path d="M2 22 Q18 16 34 22" stroke="white" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+      </svg>
+      VOYAGE
+    </a>
+    <ul class="nav-links">
+      <li><a href="games.html" class="nav-active">Games</a></li>
+      <li><a href="index.html#about">About</a></li>
+      <li><a href="index.html#acquisition">Acquisition</a></li>
+      <li><a href="index.html#contact" class="nav-cta">Contact Us</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="Menu" aria-expanded="false" aria-controls="mobileMenu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <nav class="mobile-menu" id="mobileMenu" aria-label="Mobile Navigation">
+    <a href="games.html"        onclick="closeMenu()">Games</a>
+    <a href="index.html#about"       onclick="closeMenu()">About</a>
+    <a href="index.html#acquisition" onclick="closeMenu()">Acquisition</a>
+    <a href="index.html#contact"     onclick="closeMenu()">Contact Us</a>
+  </nav>
+
+  <!-- ===== PAGE HERO ===== -->
+  <section class="games-page-hero">
+    <div class="games-page-hero-glow"></div>
+    <div class="container">
+      <span class="section-label">Portfolio</span>
+      <h1 class="section-title games-page-title">Our Games</h1>
+      <p class="games-page-sub">Every experience we ship is designed to trend, retain and grow. Explore our full portfolio below.</p>
+
+      <div class="games-page-stats animate-reveal">
+        <div class="gph-stat">
+          <span class="gph-num" data-stat="plays">57M+</span>
+          <span class="gph-label">Total Plays</span>
+        </div>
+        <div class="gph-divider"></div>
+        <div class="gph-stat">
+          <span class="gph-num" data-stat="games">4</span>
+          <span class="gph-label">Live Games</span>
+        </div>
+        <div class="gph-divider"></div>
+        <div class="gph-stat">
+          <span class="gph-num" data-stat="rating">96%+</span>
+          <span class="gph-label">Avg Rating</span>
+        </div>
+        <div class="gph-divider"></div>
+        <div class="gph-stat">
+          <span class="gph-num" data-stat="favorites">2M+</span>
+          <span class="gph-label">Favorites</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== GAMES GRID ===== -->
+  <section class="games-page-section">
+    <div class="container">
+
+      <div class="games-status" id="gamesStatus">
+        <span class="games-status-dot"></span>
+        <span id="gamesStatusText">Loading live stats…</span>
+      </div>
+
+      <!-- Populated by js/games-data.js (data-games-grid="full" enables live player count) -->
+      <div class="games-grid games-grid--full" data-games-grid="full" id="gamesGrid"></div>
+
+    </div>
+  </section>
+
+  <!-- ===== CTA ===== -->
+  <section class="games-cta-section">
+    <div class="container">
+      <div class="games-cta-card animate-reveal">
+        <div class="games-cta-left">
+          <span class="section-label">Game Acquisition</span>
+          <h2 class="section-title">Have a game to sell?</h2>
+          <p>We buy Roblox games and scale them to their full potential. Get a fair valuation today.</p>
+        </div>
+        <a href="index.html#contact" class="btn-primary">Get in Touch</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <a href="index.html" class="nav-logo footer-logo">
+          <svg width="24" height="20" viewBox="0 0 36 28" fill="none">
+            <path d="M18 2 L18 18" stroke="white" stroke-width="2" stroke-linecap="round"/>
+            <path d="M18 3 L28 13 L18 13 Z" fill="white"/>
+            <path d="M4 20 Q18 14 32 20 L28 26 Q18 24 8 26 Z" fill="white"/>
+            <path d="M2 22 Q18 16 34 22" stroke="white" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+          </svg>
+          VOYAGE
+        </a>
+        <p>Top Roblox studio building experiences played by millions.</p>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <h4>Studio</h4>
+          <a href="index.html#about">About Us</a>
+          <a href="mailto:voyagenoirtype@gmail.com">Careers</a>
+          <a href="index.html#contact">Contact</a>
+        </div>
+        <div class="footer-col">
+          <h4>Services</h4>
+          <a href="index.html#acquisition">Game Acquisition</a>
+          <a href="games.html">Our Games</a>
+        </div>
+        <div class="footer-col">
+          <h4>Legal</h4>
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container">
+        <p>© 2026 Voyage Interactive. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/games-data.js"></script>
+  <script src="js/script.js"></script>
+  <script>
+    // Update status message after games load
+    const statusEl = document.getElementById('gamesStatusText');
+    const statusWrap = document.getElementById('gamesStatus');
+
+    loadGamesOnce().then(games => {
+      const hasLive = games.some(g => g.live);
+      if (hasLive) {
+        statusEl.textContent = 'Live stats from Roblox API';
+        statusWrap.classList.add('games-status--live');
+      } else {
+        statusEl.textContent = 'Cached stats — Roblox API unavailable';
+        statusWrap.classList.add('games-status--cached');
+      }
+    });
+  </script>
+</body>
+</html>
