@@ -182,14 +182,61 @@ if (form) {
   });
 }
 
-// ===== SCROLL REVEAL =====
+// ===== SCROLL REVEAL with stagger =====
 const observer = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (entry.isIntersecting) entry.target.classList.add('visible');
   });
 }, { threshold: 0.05 });
+window.__revealObserver = observer;
 
-document.querySelectorAll('.animate-reveal, .game-card, .feature, .step').forEach(el => {
-  el.classList.add('reveal');
-  observer.observe(el);
+const revealEls = document.querySelectorAll('.animate-reveal, .game-card, .feature, .step');
+revealEls.forEach(el => el.classList.add('reveal'));
+
+// Group by parent and set stagger delays
+const parentGroups = new Map();
+revealEls.forEach(el => {
+  const key = el.parentElement;
+  if (!parentGroups.has(key)) parentGroups.set(key, []);
+  parentGroups.get(key).push(el);
 });
+parentGroups.forEach(children => {
+  children.forEach((el, i) => {
+    if (i > 0) el.style.setProperty('--stagger', `${i * 0.09}s`);
+  });
+});
+
+revealEls.forEach(el => observer.observe(el));
+
+// ===== HERO STATS COUNTER =====
+function animateCounter(el) {
+  const text = el.textContent.trim();
+  const match = text.match(/^([\d.]+)(.*)$/);
+  if (!match) return;
+  const target = parseFloat(match[1]);
+  const suffix = match[2];
+  const isFloat = match[1].includes('.');
+  const duration = 1600;
+  const start = performance.now();
+  function tick(now) {
+    const t = Math.min((now - start) / duration, 1);
+    const eased = 1 - Math.pow(1 - t, 3);
+    const val = eased * target;
+    el.textContent = (isFloat ? val.toFixed(1) : Math.floor(val)) + suffix;
+    if (t < 1) requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+}
+
+const statsBar = document.querySelector('.hero-stats-bar');
+if (statsBar) {
+  const statsObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.querySelectorAll('.hero-stat-num').forEach(animateCounter);
+        statsObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.2 });
+  statsObserver.observe(statsBar);
+}
