@@ -7,7 +7,10 @@ if (canvas) {
     'img/kick-a-brainrot.png',
     'img/steal-a-mob.png',
     'img/brainrot-balloon.png',
-    'img/grow-trees.png'
+    'img/grow-trees.png',
+    'img/explode-a-brainrot.png',
+    'img/brainrot-disaster-survival.png',
+    'img/dont-move-for-brainrots.png',
   ];
 
   const images = [];
