@@ -44,6 +44,39 @@ const GAMES = [
     image: 'img/grow-trees.png',
     url: 'https://www.roblox.com/games/103134341448025/Grow-Trees-For-Brainrots',
     fallback: { plays: '245K', rating: '94%', favorites: '25.5K' }
+  },
+  {
+    placeId:    '81776530583332',
+    universeId: '9691446155',
+    title: 'Dont Move For Brainrots',
+    genre: 'Simulator',
+    description: 'Stay completely still while Brainrots try to catch you. One wrong move and it\'s game over.',
+    image: 'img/dont-move-for-brainrots.png',
+    url: 'https://www.roblox.com/games/81776530583332/Dont-Move-For-Brainrots',
+    fallback: { plays: '114.9K', rating: '64%', favorites: '17.3K' },
+    noAvgRating: true
+  },
+  {
+    placeId:    '131666238350869',
+    universeId: '9258201022',
+    title: 'Explode a Brainrot',
+    genre: 'Simulator',
+    description: 'Launch and explode Brainrots for massive combos. Collect rare mutations and reach the top of the leaderboard.',
+    image: 'img/explode-a-brainrot.png',
+    url: 'https://www.roblox.com/games/131666238350869/Explode-a-Brainrot',
+    fallback: { plays: '44.2K', rating: '92%', favorites: '7.3K' },
+    noAvgRating: true
+  },
+  {
+    placeId:    '123506026934679',
+    universeId: '9606014660',
+    title: 'Brainrot Disaster Survival',
+    genre: 'Survival',
+    description: 'Survive waves of chaotic Brainrot disasters. Dodge, react, and outlast every threat thrown at you.',
+    image: 'img/brainrot-disaster-survival.png',
+    url: 'https://www.roblox.com/games/123506026934679/Brainrot-Disaster-Survival',
+    fallback: { plays: '30.6K', rating: '67%', favorites: '5.3K' },
+    noAvgRating: true
   }
 ];
 
@@ -122,8 +155,9 @@ async function fetchRobloxStats() {
 function updateGlobalStats(games) {
   const totalPlays     = games.reduce((s, g) => s + parseNum(getStats(g).plays),     0);
   const totalFavorites = games.reduce((s, g) => s + parseNum(getStats(g).favorites), 0);
+  const ratingGames    = games.filter(g => !g.noAvgRating);
   const avgRating      = Math.round(
-    games.reduce((s, g) => s + parseInt(g.fallback.rating), 0) / games.length
+    ratingGames.reduce((s, g) => s + parseInt(g.fallback.rating), 0) / ratingGames.length
   );
 
   const vals = {
@@ -249,7 +283,10 @@ function loadGamesOnce() {
 
   // Render grids con dati statici subito
   if (grids.length) {
-    grids.forEach(grid => renderGrid(grid, GAMES));
+    grids.forEach(grid => {
+      const list = grid.dataset.gamesGrid === 'preview' ? GAMES.slice(0, 4) : GAMES;
+      renderGrid(grid, list);
+    });
 
     function initRevealForGrid(grid) {
       grid.querySelectorAll('.game-card').forEach((el, i) => {
@@ -266,7 +303,10 @@ function loadGamesOnce() {
 
   // Fetch dati live → aggiorna card stats + totali globali (su ogni pagina)
   loadGamesOnce().then(liveGames => {
-    if (grids.length) grids.forEach(grid => updateStatsInGrid(grid, liveGames));
+    if (grids.length) grids.forEach(grid => {
+      const list = grid.dataset.gamesGrid === 'preview' ? liveGames.slice(0, 4) : liveGames;
+      updateStatsInGrid(grid, list);
+    });
     updateGlobalStats(liveGames);
   });
 })();
