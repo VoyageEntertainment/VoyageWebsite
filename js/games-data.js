@@ -109,20 +109,29 @@ function getStats(game) {
 }
 
 // ===== ROBLOX API FETCH =====
-// Multiple CORS proxies tried in order — falls through to next on failure.
+// All proxies raced in parallel — first to succeed wins.
 const CORS_PROXIES = [
+  u => `https://corsproxy.io/?url=${encodeURIComponent(u)}`,
   u => `https://api.allorigins.win/raw?url=${encodeURIComponent(u)}`,
   u => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(u)}`,
 ];
 
+const FETCH_TIMEOUT = 8000;
+
 async function robloxFetch(url) {
-  for (const makeProxy of CORS_PROXIES) {
-    try {
-      const r = await fetch(makeProxy(url));
-      if (r.ok) return r.json();
-    } catch (_) {}
+  const tryProxy = (makeProxy) => {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), FETCH_TIMEOUT);
+    return fetch(makeProxy(url), { signal: ctrl.signal })
+      .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
+      .finally(() => clearTimeout(timer));
+  };
+
+  try {
+    return await Promise.any(CORS_PROXIES.map(tryProxy));
+  } catch {
+    throw new Error('all proxies failed');
   }
-  throw new Error('all proxies failed');
 }
 
 async function fetchRobloxStats() {
@@ -174,6 +183,14 @@ function updateGlobalStats(games) {
 }
 
 async function loadGames() {
+  const cached = lsLoad();
+  if (cached) {
+    // Cache fresca: restituisci subito, aggiorna in background per la prossima visita
+    fetchRobloxStats().then(lsSave).catch(() => {});
+    console.log('[Voyage] using cached stats');
+    return cached;
+  }
+
   try {
     const games = await fetchRobloxStats();
     lsSave(games);
@@ -181,11 +198,6 @@ async function loadGames() {
     return games;
   } catch (err) {
     console.warn('[Voyage] API unavailable:', err.message);
-    const cached = lsLoad();
-    if (cached) {
-      console.log('[Voyage] using cached stats from localStorage');
-      return cached;
-    }
     return GAMES.map(g => ({ ...g, live: null }));
   }
 }
