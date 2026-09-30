@@ -1,245 +1,190 @@
-// ===== HERO CANVAS (Infinite Isometric Game Grid - Perfect Spacing) =====
-const canvas = document.getElementById('heroCanvas');
-if (canvas) {
-  const ctx = canvas.getContext('2d');
+'use strict';
 
-  const iconSources = [
-    'img/kick-a-brainrot.png',
-    'img/steal-a-mob.png',
-    'img/brainrot-balloon.png',
-    'img/grow-trees.png',
-    'img/explode-a-brainrot.png',
-    'img/brainrot-disaster-survival.png',
-    'img/dont-move-for-brainrots.png',
-  ];
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  const images = [];
-  iconSources.forEach(src => {
-    const img = new Image();
-    img.src = src;
-    img.onload = () => images.push(img);
+/* =============================================================
+   Theme. The inline script in <head> has already applied the
+   saved choice, or the system setting, before first paint.
+   ============================================================= */
+(function themeToggle() {
+  const root    = document.documentElement;
+  const meta    = document.querySelector('meta[name="theme-color"]');
+  const buttons = document.querySelectorAll('[data-theme-toggle]');
+  const KEY     = 'voyage_theme';
+
+  const apply = (theme) => {
+    root.setAttribute('data-theme', theme);
+    if (meta) meta.setAttribute('content', theme === 'dark' ? '#130f27' : '#fbf5ea');
+    buttons.forEach(b => b.setAttribute('aria-pressed', String(theme === 'dark')));
+  };
+
+  apply(root.getAttribute('data-theme') === 'dark' ? 'dark' : 'light');
+
+  buttons.forEach(b => b.addEventListener('click', () => {
+    const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    apply(next);
+    try { localStorage.setItem(KEY, next); } catch { /* storage blocked, still switches */ }
+  }));
+
+  // keep following the system until the visitor picks a theme
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+    let saved = null;
+    try { saved = localStorage.getItem(KEY); } catch { /* ignore */ }
+    if (saved !== 'light' && saved !== 'dark') apply(e.matches ? 'dark' : 'light');
+  });
+})();
+
+/* =============================================================
+   Header: background appears once the page has scrolled
+   ============================================================= */
+(function stickyHeader() {
+  const header = document.getElementById('header');
+  if (!header) return;
+
+  let ticking = false;
+  const update = () => {
+    header.classList.toggle('is-stuck', window.scrollY > 8);
+    ticking = false;
+  };
+
+  update();
+  window.addEventListener('scroll', () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(update);
+  }, { passive: true });
+})();
+
+/* =============================================================
+   Mobile navigation
+   ============================================================= */
+(function mobileNav() {
+  const toggle = document.getElementById('menuToggle');
+  const drawer = document.getElementById('mobileNav');
+  if (!toggle || !drawer) return;
+
+  const setOpen = (open) => {
+    drawer.classList.toggle('is-open', open);
+    toggle.setAttribute('aria-expanded', String(open));
+    toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+  };
+
+  toggle.addEventListener('click', () => {
+    setOpen(toggle.getAttribute('aria-expanded') !== 'true');
   });
 
-  let width = (canvas.width = canvas.offsetWidth);
-  let height = (canvas.height = canvas.offsetHeight);
-
-  window.addEventListener('resize', () => {
-    width = canvas.width = canvas.offsetWidth;
-    height = canvas.height = canvas.offsetHeight;
-    initGrid();
+  // any link inside the drawer closes it
+  drawer.addEventListener('click', (e) => {
+    if (e.target.closest('a')) setOpen(false);
   });
 
-  const iconSize  = 200;
-  const spacingX  = 280;
-  const scaleY    = 0.65;
-  const spacingY  = Math.round(280 / scaleY);
-  const borderRadius = 24;
-  const angle     = -25 * Math.PI / 180;
-  const speed     = 0.5;
+  document.addEventListener('click', (e) => {
+    if (!drawer.contains(e.target) && !toggle.contains(e.target)) setOpen(false);
+  });
 
-  let gridItems = [];
-
-  function initGrid() {
-    gridItems = [];
-    const cols = Math.ceil(width  / spacingX) + 8;
-    const rows = Math.ceil(height / spacingY) + 8;
-    for (let c = -4; c < cols; c++) {
-      for (let r = -4; r < rows; r++) {
-        gridItems.push({
-          x: c * spacingX,
-          y: r * spacingY,
-          imgIndex: Math.floor(Math.random() * iconSources.length)
-        });
-      }
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') {
+      setOpen(false);
+      toggle.focus();
     }
-  }
+  });
 
-  initGrid();
+  // the drawer is a mobile-only affordance
+  window.matchMedia('(min-width: 861px)').addEventListener('change', (e) => {
+    if (e.matches) setOpen(false);
+  });
+})();
 
-  function animateCanvas() {
-    ctx.clearRect(0, 0, width, height);
+/* =============================================================
+   Contact form
+   Status goes to a live region instead of overwriting the button
+   ============================================================= */
+(function contactForm() {
+  const form = document.getElementById('contactForm');
+  if (!form) return;
 
-    if (images.length === 0) {
-      requestAnimationFrame(animateCanvas);
+  const button = document.getElementById('submitBtn');
+  const status = document.getElementById('formStatus');
+  const ENDPOINT = 'https://formspree.io/f/mdabqwzz';
+
+  const say = (message, state) => {
+    status.textContent = message;
+    if (state) status.setAttribute('data-state', state);
+    else status.removeAttribute('data-state');
+  };
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    if (!form.checkValidity()) {
+      say('Fill in your name, email and message, and confirm your age.', 'error');
+      form.reportValidity();
       return;
     }
 
-    ctx.save();
-    ctx.translate(width / 2, height / 2);
-    ctx.rotate(angle);
-    ctx.scale(1, scaleY);
-    ctx.translate(-width / 1.3, -height / 1.3);
+    // honeypot: only a bot fills this in
+    if (form.elements.company && form.elements.company.value) return;
 
-    gridItems.forEach(item => {
-      item.y -= speed;
-
-      const resetLimitY = -400;
-      if (item.y < resetLimitY) {
-        const screenGridHeight = (Math.ceil(height / spacingY) + 12) * spacingY;
-        item.y += screenGridHeight;
-        item.imgIndex = Math.floor(Math.random() * iconSources.length);
-      }
-
-      const currentImg = images[item.imgIndex % images.length];
-      if (currentImg && currentImg.complete) {
-        ctx.save();
-        ctx.translate(item.x, item.y);
-        ctx.scale(1, 1 / scaleY);
-        ctx.globalAlpha = 0.14;
-
-        ctx.beginPath();
-        ctx.moveTo(-iconSize / 2 + borderRadius, -iconSize / 2);
-        ctx.lineTo( iconSize / 2 - borderRadius, -iconSize / 2);
-        ctx.quadraticCurveTo( iconSize / 2, -iconSize / 2,  iconSize / 2, -iconSize / 2 + borderRadius);
-        ctx.lineTo( iconSize / 2,  iconSize / 2 - borderRadius);
-        ctx.quadraticCurveTo( iconSize / 2,  iconSize / 2,  iconSize / 2 - borderRadius,  iconSize / 2);
-        ctx.lineTo(-iconSize / 2 + borderRadius,  iconSize / 2);
-        ctx.quadraticCurveTo(-iconSize / 2,  iconSize / 2, -iconSize / 2,  iconSize / 2 - borderRadius);
-        ctx.lineTo(-iconSize / 2, -iconSize / 2 + borderRadius);
-        ctx.quadraticCurveTo(-iconSize / 2, -iconSize / 2, -iconSize / 2 + borderRadius, -iconSize / 2);
-        ctx.closePath();
-        ctx.clip();
-
-        ctx.drawImage(currentImg, -iconSize / 2, -iconSize / 2, iconSize, iconSize);
-        ctx.restore();
-      }
-    });
-
-    ctx.restore();
-    requestAnimationFrame(animateCanvas);
-  }
-
-  animateCanvas();
-}
-
-// ===== NAV SCROLL EFFECT =====
-const nav = document.getElementById('nav');
-window.addEventListener('scroll', () => {
-  if (nav) nav.classList.toggle('scrolled', window.scrollY > 50);
-});
-
-// ===== HAMBURGER MENU =====
-const hamburger    = document.getElementById('hamburger');
-const mobileMenu   = document.getElementById('mobileMenu');
-
-if (hamburger && mobileMenu) {
-  hamburger.addEventListener('click', () => {
-    const isOpen = mobileMenu.classList.toggle('open');
-    hamburger.setAttribute('aria-expanded', isOpen);
-  });
-}
-
-function closeMenu() {
-  if (mobileMenu && hamburger) {
-    mobileMenu.classList.remove('open');
-    hamburger.setAttribute('aria-expanded', 'false');
-  }
-}
-
-document.addEventListener('click', (e) => {
-  if (hamburger && mobileMenu && !hamburger.contains(e.target) && !mobileMenu.contains(e.target)) {
-    closeMenu();
-  }
-});
-
-// ===== CONTACT FORM (Formspree via fetch) =====
-const form = document.getElementById('contactForm');
-if (form) {
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const btn     = form.querySelector('button[type="submit"]');
-    const oldText = btn.textContent;
-    btn.textContent = 'Sending...';
-    btn.disabled    = true;
-
-    const data = {
-      name:      form.querySelector('#nameInput').value,
-      email:     form.querySelector('#emailInput').value,
-      game_link: form.querySelector('#linkInput').value,
-      message:   form.querySelector('#msgInput').value,
+    const payload = {
+      name:      form.elements.name.value.trim(),
+      email:     form.elements.email.value.trim(),
+      game_link: form.elements.game_link.value.trim(),
+      message:   form.elements.message.value.trim()
     };
 
+    button.disabled = true;
+    button.textContent = 'Sending';
+    say('Sending your message.');
+
     try {
-      const res = await fetch('https://formspree.io/f/mdabqwzz', {
-        method:  'POST',
-        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body:    JSON.stringify(data),
+      const res = await fetch(ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify(payload)
       });
 
       if (res.ok) {
-        btn.textContent = '✅ Message sent!';
         form.reset();
+        say('Message sent. We reply to every enquiry, usually within a couple of days.', 'ok');
       } else {
-        btn.textContent = '❌ Error, try again';
-        btn.disabled    = false;
+        say('That did not go through. Email voyagenoirtype@gmail.com and we will pick it up there.', 'error');
       }
     } catch {
-      btn.textContent = '❌ Error, try again';
-      btn.disabled    = false;
+      say('Network error. Email voyagenoirtype@gmail.com and we will pick it up there.', 'error');
+    } finally {
+      button.disabled = false;
+      button.textContent = 'Send message';
     }
-
-    setTimeout(() => {
-      btn.textContent = oldText;
-      btn.disabled    = false;
-    }, 4000);
   });
-}
+})();
 
-// ===== SCROLL REVEAL with stagger =====
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) entry.target.classList.add('visible');
-  });
-}, { threshold: 0.05 });
-window.__revealObserver = observer;
+/* =============================================================
+   Blocks rise into place the first time they scroll into view
+   ============================================================= */
+(function reveal() {
+  const targets = document.querySelectorAll('.reveal');
+  if (!targets.length) return;
 
-const revealEls = document.querySelectorAll('.animate-reveal, .game-card, .feature, .step');
-revealEls.forEach(el => el.classList.add('reveal'));
-
-// Group by parent and set stagger delays
-const parentGroups = new Map();
-revealEls.forEach(el => {
-  const key = el.parentElement;
-  if (!parentGroups.has(key)) parentGroups.set(key, []);
-  parentGroups.get(key).push(el);
-});
-parentGroups.forEach(children => {
-  children.forEach((el, i) => {
-    if (i > 0) el.style.setProperty('--stagger', `${i * 0.09}s`);
-  });
-});
-
-revealEls.forEach(el => observer.observe(el));
-
-// ===== HERO STATS COUNTER =====
-function animateCounter(el) {
-  const text = el.textContent.trim();
-  const match = text.match(/^([\d.]+)(.*)$/);
-  if (!match) return;
-  const target = parseFloat(match[1]);
-  const suffix = match[2];
-  const isFloat = match[1].includes('.');
-  const duration = 1600;
-  const start = performance.now();
-  function tick(now) {
-    const t = Math.min((now - start) / duration, 1);
-    const eased = 1 - Math.pow(1 - t, 3);
-    const val = eased * target;
-    el.textContent = (isFloat ? val.toFixed(1) : Math.floor(val)) + suffix;
-    if (t < 1) requestAnimationFrame(tick);
+  if (reduceMotion || !('IntersectionObserver' in window)) {
+    targets.forEach(el => el.classList.add('is-in'));
+    return;
   }
-  requestAnimationFrame(tick);
-}
 
-const statsBar = document.querySelector('.hero-stats-bar');
-if (statsBar) {
-  const statsObserver = new IntersectionObserver((entries) => {
+  const io = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.querySelectorAll('.hero-stat-num').forEach(animateCounter);
-        statsObserver.unobserve(entry.target);
-      }
+      if (!entry.isIntersecting) return;
+      entry.target.classList.add('is-in');
+      io.unobserve(entry.target);
     });
-  }, { threshold: 0.2 });
-  statsObserver.observe(statsBar);
-}
+  }, { rootMargin: '0px 0px -8% 0px', threshold: 0.1 });
+
+  targets.forEach(el => io.observe(el));
+})();
+
+/* =============================================================
+   Footer year
+   ============================================================= */
+(function currentYear() {
+  const el = document.getElementById('year');
+  if (el) el.textContent = String(new Date().getFullYear());
+})();

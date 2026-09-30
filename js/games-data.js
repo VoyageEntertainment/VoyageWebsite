@@ -1,98 +1,114 @@
 'use strict';
 
-// ===== GAME DATA =====
-// universeId: costante per ogni gioco (ottenuto da apis.roblox.com/universes/v1/places/{placeId}/universe)
-// fallback.rating: statico perché l'API pubblica restituisce sempre null per positiveRatingPercentage
+/* =============================================================
+   Game catalogue + live stats from the public Roblox API.
+
+   universeId is constant per game (resolved once through
+   apis.roblox.com/universes/v1/places/{placeId}/universe).
+
+   fallback.* are the last values recorded by hand. They paint
+   immediately and stay on screen if the API is unreachable.
+   fallback.rating is always static: the public games endpoint
+   returns null for positiveRatingPercentage.
+
+   color is the game's accent (cards, hero cube); deep is a darker
+   shade of it that keeps white text above 4.5:1.
+   ============================================================= */
+
 const GAMES = [
   {
     placeId:    '117782023218098',
     universeId: '8153647770',
     title: 'Kick a Brainrot',
     genre: 'Simulator',
-    description: 'Hatch eggs, collect Brainrots and kick them to trigger mutations. Over 100 unique characters to discover.',
-    image: 'img/kick-a-brainrot.png',
+    description: 'Hatch eggs, collect Brainrots and kick them to trigger mutations. Over 100 characters to find.',
+    image: 'img/games/kick-a-brainrot.webp',
+    cover: 'img/games/kick-a-brainrot-cover.webp',
+    color: '#ff5a4e', deep: '#d7312c',
     url: 'https://www.roblox.com/games/117782023218098/Kick-a-Brainrot',
-    fallback: { plays: '52.4M', rating: '98%', favorites: '2.1M' },
-    featured: true
+    fallback: { plays: '53.3M', rating: '98%', favorites: '2.1M' }
   },
   {
     placeId:    '95275361430060',
     universeId: '8068146529',
     title: 'Steal a Mob',
     genre: 'Simulator',
-    description: 'Buy mobs, steal from other players and generate money. Rebirth for upgrades and troll your enemies.',
-    image: 'img/steal-a-mob.png',
+    description: 'Buy mobs, steal from other players and build an income. Rebirth for permanent upgrades.',
+    image: 'img/games/steal-a-mob.webp',
+    cover: 'img/games/steal-a-mob-cover.webp',
+    color: '#5b6cf0', deep: '#5362e6',
     url: 'https://www.roblox.com/games/95275361430060/Steal-a-Mob',
-    fallback: { plays: '2.4M', rating: '96%', favorites: '179K' }
+    fallback: { plays: '2.4M', rating: '96%', favorites: '182.5K' }
   },
   {
     placeId:    '119749960243257',
     universeId: '8626842369',
     title: 'Brainrot Balloon',
     genre: 'Simulator',
-    description: 'Pop balloons, collect Brainrots and find mutations. Over 100 unique characters to discover.',
-    image: 'img/brainrot-balloon.png',
+    description: 'Pop balloons to collect Brainrots and chase rare mutations across a growing roster.',
+    image: 'img/games/brainrot-balloon.webp',
+    cover: 'img/games/brainrot-balloon-cover.webp',
+    color: '#a98bff', deep: '#7d5ccc',
     url: 'https://www.roblox.com/games/119749960243257/Brainrot-Balloon',
-    fallback: { plays: '2.1M', rating: '94%', favorites: '221K' }
+    fallback: { plays: '2.1M', rating: '94%', favorites: '220.9K' }
   },
   {
     placeId:    '103134341448025',
     universeId: '10076620742',
     title: 'Grow Trees for Brainrots',
-    genre: 'Simulator',
-    description: 'Plant trees, collect Brainrots and earn cash offline. An addictive idle experience with endless progression.',
-    image: 'img/grow-trees.png',
+    genre: 'Idle',
+    description: 'Plant trees, harvest Brainrots and keep earning while offline. Endless progression.',
+    image: 'img/games/grow-trees.webp',
+    cover: 'img/games/grow-trees-cover.webp',
+    color: '#5cc45e', deep: '#08851b',
     url: 'https://www.roblox.com/games/103134341448025/Grow-Trees-For-Brainrots',
-    fallback: { plays: '245K', rating: '94%', favorites: '25.5K' }
+    fallback: { plays: '935.3K', rating: '94%', favorites: '101.7K' }
   },
   {
     placeId:    '81776530583332',
     universeId: '9691446155',
     title: 'Dont Move For Brainrots',
-    genre: 'Simulator',
-    description: 'Stay completely still while Brainrots try to catch you. One wrong move and it\'s game over.',
-    image: 'img/dont-move-for-brainrots.png',
+    genre: 'Survival',
+    description: 'Stay completely still while the Brainrots hunt you. One twitch and the round is over.',
+    image: 'img/games/dont-move-for-brainrots.webp',
+    cover: 'img/games/dont-move-for-brainrots-cover.webp',
+    color: '#e8b531', deep: '#926e02',
     url: 'https://www.roblox.com/games/81776530583332/Dont-Move-For-Brainrots',
-    fallback: { plays: '114.9K', rating: '64%', favorites: '17.3K' },
-    noAvgRating: true
+    fallback: { plays: '117.7K', rating: '64%', favorites: '17.6K' }
   },
   {
     placeId:    '131666238350869',
     universeId: '9258201022',
     title: 'Explode a Brainrot',
     genre: 'Simulator',
-    description: 'Launch and explode Brainrots for massive combos. Collect rare mutations and reach the top of the leaderboard.',
-    image: 'img/explode-a-brainrot.png',
+    description: 'Launch and detonate Brainrots for combos, collect mutations and climb the leaderboard.',
+    image: 'img/games/explode-a-brainrot.webp',
+    cover: 'img/games/explode-a-brainrot-cover.webp',
+    color: '#ff9a3d', deep: '#ad600b',
     url: 'https://www.roblox.com/games/131666238350869/Explode-a-Brainrot',
-    fallback: { plays: '44.2K', rating: '92%', favorites: '7.3K' },
-    noAvgRating: true
+    fallback: { plays: '44.2K', rating: '92%', favorites: '7.3K' }
   },
   {
     placeId:    '123506026934679',
     universeId: '9606014660',
     title: 'Brainrot Disaster Survival',
     genre: 'Survival',
-    description: 'Survive waves of chaotic Brainrot disasters. Dodge, react, and outlast every threat thrown at you.',
-    image: 'img/brainrot-disaster-survival.png',
+    description: 'Outlast waves of escalating disasters. Dodge, react and stay alive longer than the lobby.',
+    image: 'img/games/brainrot-disaster-survival.webp',
+    cover: 'img/games/brainrot-disaster-survival-cover.webp',
+    color: '#46b3f5', deep: '#017ab3',
     url: 'https://www.roblox.com/games/123506026934679/Brainrot-Disaster-Survival',
-    fallback: { plays: '30.6K', rating: '67%', favorites: '5.3K' },
-    noAvgRating: true
+    fallback: { plays: '30.7K', rating: '67%', favorites: '5.4K' }
   }
 ];
 
-// ===== HELPERS =====
+/* ---------- helpers ---------- */
 function fmtNum(n) {
+  if (!Number.isFinite(n) || n <= 0) return '0';
   if (n >= 1e9) return (n / 1e9).toFixed(1).replace(/\.0$/, '') + 'B';
   if (n >= 1e6) return (n / 1e6).toFixed(1).replace(/\.0$/, '') + 'M';
   if (n >= 1e3) return (n / 1e3).toFixed(1).replace(/\.0$/, '') + 'K';
-  return String(n);
-}
-
-function fmtNumRounded(n) {
-  if (n >= 1e9) return Math.floor(n / 1e9) + 'B';
-  if (n >= 1e6) return Math.floor(n / 1e6) + 'M';
-  if (n >= 1e3) return Math.floor(n / 1e3) + 'K';
-  return String(n);
+  return String(Math.round(n));
 }
 
 function parseNum(s) {
@@ -104,221 +120,326 @@ function parseNum(s) {
   return n;
 }
 
-function getStats(game) {
-  return game.live ?? game.fallback;
+function getStats(game) { return game.live || game.fallback; }
+function visitsOf(game)   { return parseNum(getStats(game).plays); }
+function favesOf(game)    { return parseNum(getStats(game).favorites); }
+function ratingOf(game)   { return parseInt(getStats(game).rating, 10) || 0; }
+function playingOf(game)  { return game.live ? (game.live.playingRaw || 0) : 0; }
+
+function esc(s) {
+  return String(s).replace(/[&<>"']/g, c => (
+    { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
+  ));
 }
 
-// ===== ROBLOX API FETCH =====
-// All proxies raced in parallel — first to succeed wins.
+const byVisits = (a, b) => visitsOf(b) - visitsOf(a);
+
+const ARROW = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h9.5M8.5 4 12.5 8l-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+/* ---------- Roblox API through public CORS proxies ---------- */
 const CORS_PROXIES = [
   u => `https://corsproxy.io/?url=${encodeURIComponent(u)}`,
   u => `https://api.allorigins.win/raw?url=${encodeURIComponent(u)}`,
-  u => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(u)}`,
+  u => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(u)}`
 ];
 
 const FETCH_TIMEOUT = 8000;
 
-async function robloxFetch(url) {
-  const tryProxy = (makeProxy) => {
-    const ctrl = new AbortController();
+function robloxFetch(url) {
+  const attempt = (makeProxy) => {
+    const ctrl  = new AbortController();
     const timer = setTimeout(() => ctrl.abort(), FETCH_TIMEOUT);
     return fetch(makeProxy(url), { signal: ctrl.signal })
-      .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
+      .then(r => {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r.json();
+      })
       .finally(() => clearTimeout(timer));
   };
-
-  try {
-    return await Promise.any(CORS_PROXIES.map(tryProxy));
-  } catch {
-    throw new Error('all proxies failed');
-  }
+  // race every proxy, first success wins
+  return Promise.any(CORS_PROXIES.map(attempt))
+    .catch(() => { throw new Error('all proxies failed'); });
 }
 
 async function fetchRobloxStats() {
-  const uIds = GAMES.map(g => g.universeId).join(',');
+  const ids = GAMES.map(g => g.universeId).join(',');
+  const payload = await robloxFetch(`https://games.roblox.com/v1/games?universeIds=${ids}`);
+  if (!payload || !Array.isArray(payload.data)) throw new Error('unexpected payload');
 
-  const { data: gamesData } = await robloxFetch(
-    `https://games.roblox.com/v1/games?universeIds=${uIds}`
-  );
-
-  const byUId = {};
-  gamesData.forEach(g => {
-    byUId[String(g.id)] = {
-      plays:     fmtNum(g.visits),
-      favorites: fmtNum(g.favoritedCount),
-      playing:   g.playing > 0 ? fmtNum(g.playing) : null,
+  const byUniverse = {};
+  payload.data.forEach(g => {
+    byUniverse[String(g.id)] = {
+      plays:      fmtNum(g.visits),
+      favorites:  fmtNum(g.favoritedCount),
+      playing:    g.playing > 0 ? fmtNum(g.playing) : null,
+      playingRaw: g.playing || 0
     };
   });
 
   return GAMES.map(game => {
-    const live = byUId[game.universeId];
-    if (!live) return { ...game, live: null };
-    return {
-      ...game,
-      live: { ...live, rating: game.fallback.rating }
-    };
+    const live = byUniverse[game.universeId];
+    if (!live) return Object.assign({}, game, { live: null });
+    // rating is not exposed by this endpoint, keep the recorded value
+    return Object.assign({}, game, {
+      live: Object.assign({}, live, { rating: game.fallback.rating })
+    });
   });
 }
 
-// ===== TOTALI GLOBALI =====
-function updateGlobalStats(games) {
-  const totalPlays     = games.reduce((s, g) => s + parseNum(getStats(g).plays),     0);
-  const totalFavorites = games.reduce((s, g) => s + parseNum(getStats(g).favorites), 0);
-  const ratingGames    = games.filter(g => !g.noAvgRating);
-  const avgRating      = Math.round(
-    ratingGames.reduce((s, g) => s + parseInt(g.fallback.rating), 0) / ratingGames.length
-  );
-
-  const vals = {
-    plays:     fmtNumRounded(totalPlays) + '+',
-    games:     String(games.length),
-    rating:    avgRating + '%+',
-    favorites: fmtNumRounded(totalFavorites) + '+'
-  };
-
-  document.querySelectorAll('[data-stat]').forEach(el => {
-    const v = vals[el.dataset.stat];
-    if (v !== undefined) el.textContent = v;
-  });
-}
-
-async function loadGames() {
-  const cached = lsLoad();
-  if (cached) {
-    // Cache fresca: restituisci subito, aggiorna in background per la prossima visita
-    fetchRobloxStats().then(lsSave).catch(() => {});
-    console.log('[Voyage] using cached stats');
-    return cached;
-  }
-
-  try {
-    const games = await fetchRobloxStats();
-    lsSave(games);
-    console.log('[Voyage] live stats loaded from API');
-    return games;
-  } catch (err) {
-    console.warn('[Voyage] API unavailable:', err.message);
-    return GAMES.map(g => ({ ...g, live: null }));
-  }
-}
-
-// ===== CARD HTML BUILDER =====
-function makeGameCard(game, showPlaying = false) {
-  const stats = getStats(game);
-  const playingBadge = showPlaying && game.live?.playing
-    ? `<span class="game-live"><span class="live-dot"></span>${game.live.playing} playing</span>`
-    : '';
-
-  return `
-    <a href="${game.url}" target="_blank" rel="noopener" class="game-card animate-reveal">
-      <div class="game-card-thumb">
-        <img src="${game.image}" alt="${game.title}" loading="lazy" />
-        <span class="game-badge">${game.genre}</span>
-        <div class="game-card-overlay">
-          <div class="game-card-play">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-            Play on Roblox
-          </div>
-        </div>
-      </div>
-      <div class="game-card-body">
-        <div class="game-card-header">
-          <h3>${game.title}</h3>
-          ${playingBadge}
-        </div>
-        <p>${game.description}</p>
-        <div class="game-stats">
-          <div class="game-stat"><span class="gs-num">${stats.plays}</span><span class="gs-label">Plays</span></div>
-          <div class="game-stat"><span class="gs-num">${stats.rating}</span><span class="gs-label">Rating</span></div>
-          <div class="game-stat"><span class="gs-num">${stats.favorites}</span><span class="gs-label">Favorites</span></div>
-        </div>
-      </div>
-    </a>`;
-}
-
-// ===== RENDER =====
-function renderGrid(container, games) {
-  container.innerHTML = games.map(g => makeGameCard(g)).join('');
-}
-
-// Update stats in-place (no re-render — preserves reveal classes)
-function updateStatsInGrid(container, liveGames) {
-  const cards = container.querySelectorAll('.game-card');
-  liveGames.forEach((game, i) => {
-    if (!game.live || !cards[i]) return;
-    const nums = cards[i].querySelectorAll('.gs-num');
-    if (nums[0]) nums[0].textContent = game.live.plays;
-    if (nums[1]) nums[1].textContent = game.live.rating;
-    if (nums[2]) nums[2].textContent = game.live.favorites;
-
-    if (game.live.playing) {
-      const header = cards[i].querySelector('.game-card-header');
-      if (header && !header.querySelector('.game-live')) {
-        header.insertAdjacentHTML('beforeend',
-          `<span class="game-live"><span class="live-dot"></span>${game.live.playing} playing</span>`);
-      }
-    }
-  });
-}
-
-// ===== LOCALSTORAGE CACHE =====
+/* ---------- localStorage cache ---------- */
 const LS_KEY = 'voyage_live_stats';
-const LS_TTL = 30 * 60 * 1000; // 30 minuti
+const LS_TTL = 30 * 60 * 1000;
 
-function lsLoad() {
+// Only the live numbers are cached. Titles, art and colours always come
+// from GAMES above, so a stale cache can never show outdated artwork.
+function cacheRead() {
   try {
     const raw = localStorage.getItem(LS_KEY);
     if (!raw) return null;
-    const { ts, games } = JSON.parse(raw);
-    if (Date.now() - ts > LS_TTL) return null;
-    return games;
+    const { ts, live } = JSON.parse(raw);
+    if (!live || typeof live !== 'object' || Date.now() - ts > LS_TTL) return null;
+    return GAMES.map(g => Object.assign({}, g, { live: live[g.universeId] || null }));
   } catch { return null; }
 }
 
-function lsSave(games) {
+function cacheWrite(games) {
   try {
-    if (games.some(g => g.live))
-      localStorage.setItem(LS_KEY, JSON.stringify({ ts: Date.now(), games }));
-  } catch {}
+    if (!games.some(g => g.live)) return;
+    const live = {};
+    games.forEach(g => { if (g.live) live[g.universeId] = g.live; });
+    localStorage.setItem(LS_KEY, JSON.stringify({ ts: Date.now(), live }));
+  } catch { /* private mode or quota, ignore */ }
 }
 
-// ===== CACHED PROMISE (avoid double-fetching) =====
+async function loadGames() {
+  const cached = cacheRead();
+  if (cached) {
+    fetchRobloxStats().then(cacheWrite).catch(() => {});
+    return cached;
+  }
+  try {
+    const games = await fetchRobloxStats();
+    cacheWrite(games);
+    return games;
+  } catch {
+    return GAMES.map(g => Object.assign({}, g, { live: null }));
+  }
+}
+
 let _gamesPromise = null;
 function loadGamesOnce() {
   if (!_gamesPromise) _gamesPromise = loadGames();
   return _gamesPromise;
 }
 
-// ===== INIT =====
-(function init() {
-  const grids = document.querySelectorAll('[data-games-grid]');
+/* =============================================================
+   Renderers
+   ============================================================= */
 
-  // Render grids con dati statici subito
-  if (grids.length) {
-    grids.forEach(grid => {
-      const list = grid.dataset.gamesGrid === 'preview' ? GAMES.slice(0, 4) : GAMES;
-      renderGrid(grid, list);
-    });
+/* Headline figures. The recorded totals are already in the HTML;
+   this swaps in fresh ones. "Playing now" has no offline value, so
+   its tile stays hidden unless a live number arrives. */
+function renderFigures(games) {
+  const playing = games.reduce((s, g) => s + playingOf(g), 0);
+  const values = {
+    visits:    fmtNum(games.reduce((s, g) => s + visitsOf(g), 0)),
+    games:     String(games.length),
+    favorites: fmtNum(games.reduce((s, g) => s + favesOf(g), 0)),
+    playing:   playing > 0 ? fmtNum(playing) : null
+  };
 
-    function initRevealForGrid(grid) {
-      grid.querySelectorAll('.game-card').forEach((el, i) => {
-        if (el.classList.contains('reveal')) return;
-        el.classList.add('reveal');
-        if (i > 0) el.style.setProperty('--stagger', `${i * 0.09}s`);
-        if (window.__revealObserver) window.__revealObserver.observe(el);
-      });
+  document.querySelectorAll('[data-figure]').forEach(el => {
+    const value = values[el.dataset.figure];
+    if (value === undefined) return;
+    const tile = el.closest('[data-live]');
+    if (value === null) {
+      if (tile) tile.hidden = true;
+      return;
     }
+    el.textContent = value;
+    if (tile) tile.hidden = false;
+  });
+}
 
-    grids.forEach(initRevealForGrid);
-    setTimeout(() => grids.forEach(initRevealForGrid), 0);
+/* The most visited game, as a panel in its own colour. */
+function renderFeatured(game) {
+  const host = document.getElementById('featuredGame');
+  if (!host) return;
+  const stats   = getStats(game);
+  const playing = playingOf(game);
+
+  host.innerHTML = `
+    <article class="featured" style="--deep:${esc(game.deep)}">
+      <div class="featured-copy">
+        <p class="badge">Most played</p>
+        <h3>${esc(game.title)}</h3>
+        <p class="featured-desc">${esc(game.description)}</p>
+        <dl class="featured-stats">
+          <div><dt>Visits</dt><dd>${esc(stats.plays)}</dd></div>
+          <div><dt>Rating</dt><dd>${esc(stats.rating)}</dd></div>
+          <div><dt>Favorites</dt><dd>${esc(stats.favorites)}</dd></div>
+          ${playing > 0 ? `<div><dt>Playing now</dt><dd>${esc(fmtNum(playing))}</dd></div>` : ''}
+        </dl>
+        <a class="btn btn--white" href="${esc(game.url)}" target="_blank" rel="noopener noreferrer">
+          Play on Roblox ${ARROW}
+        </a>
+      </div>
+      <div class="featured-art">
+        <img class="featured-cover" src="${esc(game.cover)}" alt="Screenshot from ${esc(game.title)}" width="768" height="432" />
+        <img class="featured-icon" src="${esc(game.image)}" alt="" width="512" height="512" />
+      </div>
+    </article>`;
+}
+
+function gameCard(game) {
+  const stats   = getStats(game);
+  const playing = playingOf(game);
+  return `
+    <a class="game-card" href="${esc(game.url)}" target="_blank" rel="noopener noreferrer" style="--c:${esc(game.color)}">
+      <div class="game-art">
+        <img src="${esc(game.image)}" alt="" loading="lazy" width="512" height="512" />
+        ${playing > 0 ? `<span class="live-chip"><span class="dot"></span>${esc(fmtNum(playing))} playing</span>` : ''}
+      </div>
+      <div class="game-info">
+        <h3>${esc(game.title)}</h3>
+        <p class="game-meta">
+          <span class="chip">${esc(game.genre)}</span>
+          <span><b>${esc(stats.plays)}</b> visits</span>
+          <span><b>${esc(stats.rating)}</b> rating</span>
+        </p>
+      </div>
+    </a>`;
+}
+
+function renderCards(grid, games) {
+  if (grid) grid.innerHTML = games.map(gameCard).join('');
+}
+
+/* Games page: one tile per game, led by its promo art. The title link
+   stretches over the whole tile. */
+function gameTile(game) {
+  const stats   = getStats(game);
+  const playing = playingOf(game);
+  return `
+    <article class="tile" style="--c:${esc(game.color)}">
+      <div class="tile-cover">
+        <img src="${esc(game.cover)}" alt="" loading="lazy" width="768" height="432" />
+      </div>
+      <div class="tile-body">
+        <img class="tile-icon" src="${esc(game.image)}" alt="" loading="lazy" width="512" height="512" />
+        <div class="tile-head">
+          <h3 class="tile-title">
+            <a href="${esc(game.url)}" target="_blank" rel="noopener noreferrer">${esc(game.title)}</a>
+          </h3>
+          <span class="chip">${esc(game.genre)}</span>
+        </div>
+        <p class="tile-desc">${esc(game.description)}</p>
+        <dl class="tile-stats">
+          <div><dt>Visits</dt><dd>${esc(stats.plays)}</dd></div>
+          <div><dt>Rating</dt><dd>${esc(stats.rating)}</dd></div>
+          <div><dt>Favorites</dt><dd>${esc(stats.favorites)}</dd></div>
+          ${playing > 0
+            ? `<div class="is-live"><dt>Playing now</dt><dd>${esc(fmtNum(playing))}</dd></div>`
+            : '<div class="is-none"><dt>Playing now</dt><dd aria-label="Not available">&ndash;</dd></div>'}
+        </dl>
+      </div>
+    </article>`;
+}
+
+/* Games page: say where the numbers came from. */
+function renderSource(games, settled) {
+  const wrap = document.getElementById('sourceState');
+  const text = document.getElementById('sourceText');
+  if (!wrap || !text || !settled) return;
+  const live = games.some(g => g.live);
+  wrap.classList.toggle('is-live', live);
+  wrap.classList.toggle('is-stale', !live);
+  text.textContent = live ? 'Live from the Roblox API' : 'Roblox API unreachable, showing recorded values';
+}
+
+/* ---------- games page state ---------- */
+const view = { genre: 'All', sort: 'visits', data: GAMES };
+
+// biggest first for every number, ties broken by visits; names A to Z
+const SORTS = {
+  visits:    (a, b) => visitsOf(b) - visitsOf(a),
+  rating:    (a, b) => ratingOf(b) - ratingOf(a) || visitsOf(b) - visitsOf(a),
+  favorites: (a, b) => favesOf(b) - favesOf(a),
+  playing:   (a, b) => playingOf(b) - playingOf(a) || visitsOf(b) - visitsOf(a),
+  title:     (a, b) => a.title.localeCompare(b.title)
+};
+
+function applyView() {
+  const host = document.getElementById('gamesList');
+  if (!host) return;
+
+  let list = view.data.slice();
+  if (view.genre !== 'All') list = list.filter(g => g.genre === view.genre);
+  list.sort(SORTS[view.sort] || SORTS.visits);
+
+  host.innerHTML = list.map(gameTile).join('');
+
+  const count = document.getElementById('resultCount');
+  if (count) count.textContent = list.length === 1 ? '1 game' : `${list.length} games`;
+}
+
+function initGamesControls() {
+  const filterBar = document.getElementById('genreFilter');
+  const sortBy    = document.getElementById('sortBy');
+
+  if (filterBar) {
+    const genres = ['All'].concat(Array.from(new Set(GAMES.map(g => g.genre))).sort());
+    filterBar.innerHTML = genres.map((genre, i) => `
+      <button type="button" class="filter-btn" data-genre="${esc(genre)}"
+              aria-pressed="${i === 0 ? 'true' : 'false'}">${esc(genre)}</button>`).join('');
+
+    filterBar.addEventListener('click', e => {
+      const btn = e.target.closest('.filter-btn');
+      if (!btn) return;
+      view.genre = btn.dataset.genre;
+      filterBar.querySelectorAll('.filter-btn').forEach(b =>
+        b.setAttribute('aria-pressed', String(b === btn)));
+      applyView();
+    });
   }
 
-  // Fetch dati live → aggiorna card stats + totali globali (su ogni pagina)
-  loadGamesOnce().then(liveGames => {
-    if (grids.length) grids.forEach(grid => {
-      const list = grid.dataset.gamesGrid === 'preview' ? liveGames.slice(0, 4) : liveGames;
-      updateStatsInGrid(grid, list);
+  if (sortBy) {
+    sortBy.value = view.sort;
+    sortBy.addEventListener('change', () => {
+      view.sort = sortBy.value;
+      applyView();
     });
-    updateGlobalStats(liveGames);
+  }
+}
+
+/* ---------- boot ---------- */
+(function init() {
+  const previewGrid = document.querySelector('[data-games-grid="preview"]');
+  const onGamesPage = !!document.getElementById('gamesList');
+
+  function paint(games, settled) {
+    const ranked = games.slice().sort(byVisits);
+
+    if (previewGrid) {
+      renderFeatured(ranked[0]);
+      renderCards(previewGrid, ranked.slice(1, 5));
+    }
+    renderFigures(games);
+    renderSource(games, settled);
+
+    if (onGamesPage) {
+      view.data = games;
+      applyView();
+    }
+  }
+
+  // 1. recorded values first, so nothing waits on the network
+  const offline = GAMES.map(g => Object.assign({}, g, { live: null }));
+  if (onGamesPage) initGamesControls();
+  paint(offline, false);
+
+  // 2. live values once the API answers, or gives up
+  loadGamesOnce().then(games => {
+    paint(games.some(g => g.live) ? games : offline, true);
   });
 })();
