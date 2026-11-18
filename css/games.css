@@ -2,20 +2,11 @@
    Games page
    ============================================================= */
 
-.games-head {
-  display: grid;
-  grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
-  gap: 32px 64px;
-  align-items: end;
-}
-.games-head .stats {
-  margin-top: 0;
-  padding-top: 0;
-  border-top: 0;
-  justify-content: flex-end;
-}
+/* the figures sit under the title here, so they need less air above */
+.page-head .stats { margin-top: clamp(36px, 4.4vw, 56px); }
 
-.games-list { padding-bottom: var(--section); }
+/* the list starts close under the headline figures */
+.games-list { padding-top: clamp(40px, 5vw, 64px); }
 
 /* ---------- Toolbar ---------- */
 .toolbar {
@@ -24,206 +15,99 @@
   align-items: center;
   justify-content: space-between;
   gap: 16px 24px;
-  padding: 24px 0 22px;
-  border-top: 2px solid var(--line);
 }
 
+/* genre filter: a row of pills, the chosen one filled */
 .filter-set { display: flex; flex-wrap: wrap; gap: 8px; }
 .filter-btn {
-  font-size: 0.9375rem;
-  font-weight: 700;
-  color: var(--text);
-  padding: 11px 18px;
-  border: 0;
-  border-radius: 999px;
-  background: var(--surface);
-  box-shadow: inset 0 0 0 2px var(--line);
-  cursor: pointer;
-  transition: background-color 0.16s var(--ease), box-shadow 0.16s var(--ease), color 0.16s var(--ease);
-}
-.filter-btn:hover { box-shadow: inset 0 0 0 2px var(--line-2); }
-.filter-btn[aria-pressed='true'] { background: var(--text); color: var(--bg); box-shadow: none; }
-
-.sort {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 0.9375rem;
-  font-weight: 600;
+  min-height: 42px;
+  padding: 0 20px;
+  font-size: 0.875rem;
+  font-weight: 500;
   color: var(--text-2);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--line-2);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: color 0.16s var(--ease), background-color 0.16s var(--ease), border-color 0.16s var(--ease);
 }
+.filter-btn:hover { color: #fff; border-color: rgba(255, 255, 255, 0.34); }
+.filter-btn[aria-pressed='true'] {
+  color: #fff;
+  font-weight: 600;
+  background: linear-gradient(135deg, var(--blue-deep), var(--blue));
+  border-color: transparent;
+  box-shadow: 0 8px 26px rgba(42, 107, 255, 0.36);
+}
+
+.sort { display: inline-flex; align-items: center; gap: 12px; }
+.sort > .icon { width: 16px; height: 16px; color: var(--text-3); }
+.sort-field { position: relative; }
 .sort select {
   appearance: none;
   -webkit-appearance: none;
-  font-size: 0.9375rem;
-  font-weight: 700;
-  color: var(--text);
-  background: var(--surface);
-  border: 0;
-  border-radius: 12px;
-  box-shadow: inset 0 0 0 2px var(--line);
-  padding: 11px 42px 11px 15px;
+  min-height: 42px;
+  padding: 0 44px 0 20px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--line-2);
+  border-radius: 999px;
   cursor: pointer;
+  transition: border-color 0.16s var(--ease);
 }
-.sort select:hover { box-shadow: inset 0 0 0 2px var(--line-2); }
-/* the chevron is a mask, so it takes the text colour in either theme */
-.sort::after {
-  content: '';
+.sort select:hover { border-color: rgba(255, 255, 255, 0.34); }
+/* native option lists do not inherit the page background everywhere */
+.sort option { color: #fff; background: #10141d; }
+.sort-field .icon {
   position: absolute;
-  right: 15px; top: 50%;
-  width: 11px; height: 8px;
-  margin-top: -4px;
-  background: var(--text);
-  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1.5 1.5 6 6l4.5-4.5' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
-  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1.5 1.5 6 6l4.5-4.5' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
+  right: 16px; top: 50%;
+  width: 16px; height: 16px;
+  margin-top: -8px;
+  color: var(--text-2);
+  stroke-width: 2;
   pointer-events: none;
 }
 
 .list-meta {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 8px 24px;
-  margin-bottom: 28px;
-  font-size: 0.9375rem;
-  font-weight: 600;
-  color: var(--text-3);
-}
-.source-state { display: inline-flex; align-items: center; gap: 8px; }
-.source-state .dot { background: var(--text-3); }
-.source-state.is-live { color: var(--live-text); }
-.source-state.is-live .dot { background: var(--live-dot); }
-.source-state.is-stale { color: var(--warn-text); }
-.source-state.is-stale .dot { background: var(--sun-edge); }
-
-/* ---------- Game tiles ---------- */
-.tiles {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 28px;
-}
-.tiles:empty::after {
-  content: 'No games match that filter.';
-  grid-column: 1 / -1;
-  padding: 48px 0;
-  font-weight: 600;
-  color: var(--text-3);
-}
-
-.tile {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  background: var(--surface);
-  border-radius: 28px;
-  overflow: hidden;
-  box-shadow: 0 0 0 1px var(--line);
-  transition: transform 0.3s var(--spring), box-shadow 0.3s var(--ease);
-}
-.tile:hover,
-.tile:focus-within {
-  transform: translateY(-4px);
-  box-shadow: 0 0 0 1px var(--line), 0 10px 0 var(--c);
-}
-
-.tile-cover {
-  aspect-ratio: 16 / 9;
-  overflow: hidden;
-  background: var(--bg-2);
-}
-.tile-cover img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.5s var(--ease);
-}
-.tile:hover .tile-cover img { transform: scale(1.04); }
-
-.tile-body { display: flex; flex-direction: column; flex: 1; padding: 0 28px 28px; }
-.tile-icon {
-  position: relative;
-  width: 92px; height: 92px;
-  margin-top: -46px;
-  object-fit: cover;
-  border-radius: 24px;
-  border: 5px solid var(--surface);
-  box-shadow: 0 10px 22px var(--drop);
-}
-.tile-head {
-  display: flex;
-  flex-wrap: wrap;
   align-items: center;
-  gap: 8px 12px;
-  margin-top: 16px;
+  justify-content: space-between;
+  gap: 10px 24px;
+  margin: 26px 0 26px;
 }
-.tile-title { font-size: 1.45rem; letter-spacing: -0.03em; }
-/* the title link covers the whole tile */
-.tile-title a::after {
+
+/* where the numbers came from: grey while loading, green when live,
+   amber when the recorded values are standing in */
+.source-state {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+.source-state::before {
   content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: 28px;
+  width: 8px; height: 8px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--text-3);
 }
-.tile-title a:focus-visible { outline: none; }
-.tile-title a:focus-visible::after { outline: 3px solid var(--focus); outline-offset: 3px; }
-
-.tile-desc { margin-top: 10px; color: var(--text-2); max-width: 52ch; }
-
-.tile-stats {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 12px;
-  margin-top: auto;
-  padding-top: 22px;
-}
-.tile-stats div {
-  display: flex;
-  flex-direction: column-reverse;
-  gap: 5px;
-  padding-top: 16px;
-  border-top: 2px solid var(--line);
-}
-.tile-stats dd {
-  font-family: var(--font-display);
-  font-size: 1.2rem;
-  font-weight: 600;
-  letter-spacing: -0.03em;
-  line-height: 1;
-}
-.tile-stats dt { font-size: 0.8125rem; font-weight: 600; color: var(--text-3); }
-.tile-stats .is-live dd { color: var(--live-text); }
-.tile-stats .is-none dd { color: var(--text-3); }
-
-/* With an odd number of games the first one takes the full row,
-   cover on the left, so the grid never ends on a lone tile. */
-@media (min-width: 861px) {
-  .tile:first-child:nth-last-child(odd) {
-    grid-column: 1 / -1;
-    display: grid;
-    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
-  }
-  .tile:first-child:nth-last-child(odd) .tile-cover { aspect-ratio: auto; min-height: 100%; }
-  .tile:first-child:nth-last-child(odd) .tile-body { padding: 36px 40px 36px; }
-  .tile:first-child:nth-last-child(odd) .tile-icon { margin-top: 0; }
-  .tile:first-child:nth-last-child(odd) .tile-title { font-size: 1.9rem; }
-}
-
-@media (max-width: 1080px) {
-  .games-head { grid-template-columns: 1fr; }
-  .games-head .stats { justify-content: flex-start; }
-}
-
-@media (max-width: 860px) {
-  .tiles { grid-template-columns: 1fr; }
-}
+.source-state.is-live { color: var(--green); }
+.source-state.is-live::before { background: var(--green); animation: ping 2.4s ease-out infinite; }
+.source-state.is-stale { color: var(--amber); }
+.source-state.is-stale::before { background: var(--amber); }
 
 @media (max-width: 640px) {
   .toolbar { flex-direction: column; align-items: stretch; }
+  .filter-btn { flex: 1 1 auto; padding-inline: 12px; }
   .sort { justify-content: space-between; }
-  .sort select { flex: 1; }
-  .tile-body { padding: 0 20px 22px; }
-  .tile-icon { width: 76px; height: 76px; margin-top: -38px; border-radius: 20px; }
-  .tile-title { font-size: 1.25rem; }
-  .tile-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .sort-field { flex: 1; }
+  .sort select { width: 100%; }
 }

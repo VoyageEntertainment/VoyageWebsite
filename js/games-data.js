@@ -3,6 +3,10 @@
 /* =============================================================
    Game catalogue + live stats from the public Roblox API.
 
+   To add a game, add an entry to GAMES. Every list on the site
+   (the wall of art in the hero, the cards on the home page, the games
+   page) is built from it.
+
    universeId is constant per game (resolved once through
    apis.roblox.com/universes/v1/places/{placeId}/universe).
 
@@ -11,8 +15,9 @@
    fallback.rating is always static: the public games endpoint
    returns null for positiveRatingPercentage.
 
-   color is the game's accent (cards, hero cube); deep is a darker
-   shade of it that keeps white text above 4.5:1.
+   color is the game's own accent. It only shows behind the art
+   while the image is still loading. deep is a darker shade of it,
+   kept for anything that needs white text on the game colour.
    ============================================================= */
 
 const GAMES = [
@@ -134,10 +139,31 @@ function esc(s) {
 
 const byVisits = (a, b) => visitsOf(b) - visitsOf(a);
 
-const ARROW = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h9.5M8.5 4 12.5 8l-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+// An icon from the sprite inlined at the top of each page (img/icons.svg).
+function icon(name, cls) {
+  return `<svg class="icon${cls ? ' ' + cls : ''}" aria-hidden="true"><use href="#${name}"/></svg>`;
+}
 
-/* ---------- Roblox API through public CORS proxies ---------- */
+const NEW_TAB = 'target="_blank" rel="noopener noreferrer"';
+
+// Lists are painted twice, once with recorded values and once when the API
+// settles. If nothing changed, leave the DOM alone so no image reloads.
+function setHTML(host, html) {
+  if (host._html === html) return false;
+  host._html = html;
+  host.innerHTML = html;
+  return true;
+}
+
+
+/* ---------- Roblox API through public proxies ----------
+   games.roblox.com sends no CORS headers, so a browser cannot call it
+   directly. Each entry turns the real URL into one a page may fetch.
+   The first is roproxy, a mirror of the Roblox API that keeps the same
+   paths on its own host; the rest are general-purpose CORS proxies.
+   Any host added or removed here also belongs in privacy.html. */
 const CORS_PROXIES = [
+  u => u.replace('//games.roblox.com/', '//games.roproxy.com/'),
   u => `https://corsproxy.io/?url=${encodeURIComponent(u)}`,
   u => `https://api.allorigins.win/raw?url=${encodeURIComponent(u)}`,
   u => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(u)}`
@@ -233,12 +259,34 @@ function loadGamesOnce() {
 }
 
 /* =============================================================
+   Player counts
+   ============================================================= */
+
+// Concurrent players are only worth showing when there are enough of
+// them. Below this total across all games the site says nothing about
+// who is online: no "Playing now" plaque, no pills on the art, no figure
+// on the cards. Visits and favorites stay live either way.
+const MIN_PLAYERS_SHOWN = 100;
+
+// The games as they should be drawn: unchanged when the total clears the
+// bar, otherwise with every player count blanked.
+function forDisplay(games) {
+  const total = games.reduce((s, g) => s + playingOf(g), 0);
+  if (total >= MIN_PLAYERS_SHOWN) return games;
+  return games.map(g => (g.live
+    ? Object.assign({}, g, { live: Object.assign({}, g.live, { playing: null, playingRaw: 0 }) })
+    : g));
+}
+
+const hasPlayers = games => games.some(g => playingOf(g) > 0);
+
+/* =============================================================
    Renderers
    ============================================================= */
 
-/* Headline figures. The recorded totals are already in the HTML;
-   this swaps in fresh ones. "Playing now" has no offline value, so
-   its tile stays hidden unless a live number arrives. */
+/* Headline figures. The recorded totals are already in the HTML; this
+   swaps in fresh ones. "Playing now" has no offline value, so its entry
+   stays hidden unless there is a number to show. */
 function renderFigures(games) {
   const playing = games.reduce((s, g) => s + playingOf(g), 0);
   const values = {
@@ -261,89 +309,108 @@ function renderFigures(games) {
   });
 }
 
-/* The most visited game, as a panel in its own colour. */
-function renderFeatured(game) {
-  const host = document.getElementById('featuredGame');
-  if (!host) return;
-  const stats   = getStats(game);
-  const playing = playingOf(game);
+/* ---------- home page: the wall behind the title ----------
+   Twelve tilted pieces of game art around the edges of the hero. Their
+   places are fixed in css/style.css (.wall-tile:nth-child); this only
+   deals the art into them: every cover first, most played first, then
+   the square icons. It is decoration, so it is built once and never
+   refreshed when the live numbers arrive. */
+const WALL_TILES = 12;
 
-  host.innerHTML = `
-    <article class="featured" style="--deep:${esc(game.deep)}">
-      <div class="featured-copy">
-        <p class="badge">Most played</p>
-        <h3>${esc(game.title)}</h3>
-        <p class="featured-desc">${esc(game.description)}</p>
-        <dl class="featured-stats">
-          <div><dt>Visits</dt><dd>${esc(stats.plays)}</dd></div>
-          <div><dt>Rating</dt><dd>${esc(stats.rating)}</dd></div>
-          <div><dt>Favorites</dt><dd>${esc(stats.favorites)}</dd></div>
-          ${playing > 0 ? `<div><dt>Playing now</dt><dd>${esc(fmtNum(playing))}</dd></div>` : ''}
-        </dl>
-        <a class="btn btn--white" href="${esc(game.url)}" target="_blank" rel="noopener noreferrer">
-          Play on Roblox ${ARROW}
-        </a>
-      </div>
-      <div class="featured-art">
-        <img class="featured-cover" src="${esc(game.cover)}" alt="Screenshot from ${esc(game.title)}" width="768" height="432" />
-        <img class="featured-icon" src="${esc(game.image)}" alt="" width="512" height="512" />
-      </div>
-    </article>`;
+function renderWall(ranked) {
+  const host = document.getElementById('heroWall');
+  if (!host || host.firstElementChild || !ranked.length) return;
+
+  const art = ranked.map(g => ({ src: g.cover, color: g.color, square: false }))
+    .concat(ranked.map(g => ({ src: g.image, color: g.color, square: true })));
+
+  let html = '';
+  for (let i = 0; i < WALL_TILES; i++) {
+    const a = art[i % art.length];
+    html += `<div class="wall-tile${a.square ? ' wall-tile--sq' : ''}" style="background-color:${esc(a.color)}">` +
+            `<img src="${esc(a.src)}" alt="" decoding="async" /></div>`;
+  }
+  host.innerHTML = html;
 }
 
-function gameCard(game) {
+/* ---------- a game's figures ---------- */
+function gstat(value, label, kind) {
+  return `<span class="gstat${kind ? ' gstat--' + kind : ''}"><b>${value}</b><span class="label">${label}</span></span>`;
+}
+
+// Visits lead, in the accent; the player count only appears when there
+// is one worth showing (see MIN_PLAYERS_SHOWN).
+function gstats(game) {
   const stats   = getStats(game);
   const playing = playingOf(game);
+  return `<span class="gstats">` +
+    gstat(esc(stats.plays), 'Visits', 'lead') +
+    gstat(esc(stats.favorites), 'Favorites') +
+    gstat(esc(stats.rating), 'Rating') +
+    (playing > 0 ? gstat(`<span class="live-dot"></span>${esc(fmtNum(playing))}`, 'Playing now', 'live') : '') +
+    `</span>`;
+}
+
+// "#01", "#02", ...: a game's place by visits.
+const rankLabel = rank => '#' + String(rank).padStart(2, '0');
+
+const PLAY = `<span class="play">Play on Roblox ${icon('i-arrow-up-right')}</span>`;
+
+/* The most played game, as a wide card with its art on the left. */
+function flagshipCard(game) {
   return `
-    <a class="game-card" href="${esc(game.url)}" target="_blank" rel="noopener noreferrer" style="--c:${esc(game.color)}">
-      <div class="game-art">
-        <img src="${esc(game.image)}" alt="" loading="lazy" width="512" height="512" />
-        ${playing > 0 ? `<span class="live-chip"><span class="dot"></span>${esc(fmtNum(playing))} playing</span>` : ''}
-      </div>
-      <div class="game-info">
-        <h3>${esc(game.title)}</h3>
-        <p class="game-meta">
-          <span class="chip">${esc(game.genre)}</span>
-          <span><b>${esc(stats.plays)}</b> visits</span>
-          <span><b>${esc(stats.rating)}</b> rating</span>
-        </p>
-      </div>
+    <a class="flagship" href="${esc(game.url)}" ${NEW_TAB}>
+      <span class="flagship-art" style="background-color:${esc(game.color)}">
+        <img src="${esc(game.cover)}" alt="" width="768" height="432" />
+      </span>
+      <span class="flagship-body">
+        <span class="rank"><b>${rankLabel(1)}</b> Most played</span>
+        <span class="flagship-title">${esc(game.title)}</span>
+        ${gstats(game)}
+        ${PLAY}
+      </span>
     </a>`;
 }
 
-function renderCards(grid, games) {
-  if (grid) grid.innerHTML = games.map(gameCard).join('');
+/* One card per game; the whole card is the link. The games page asks
+   for the detailed version, which adds the description. */
+function gameCard(game, rank, detailed) {
+  return `
+    <a class="gcard" href="${esc(game.url)}" ${NEW_TAB}>
+      <span class="gcard-art" style="background-color:${esc(game.color)}">
+        <img src="${esc(game.cover)}" alt="" loading="lazy" width="768" height="432" />
+      </span>
+      <span class="gcard-body">
+        <span class="rank"><b>${rankLabel(rank)}</b> ${esc(game.genre)}</span>
+        <span class="gcard-title">${esc(game.title)}</span>
+        ${detailed ? `<span class="gcard-desc">${esc(game.description)}</span>` : ''}
+        ${gstats(game)}
+        ${PLAY}
+      </span>
+    </a>`;
 }
 
-/* Games page: one tile per game, led by its promo art. The title link
-   stretches over the whole tile. */
-function gameTile(game) {
-  const stats   = getStats(game);
-  const playing = playingOf(game);
-  return `
-    <article class="tile" style="--c:${esc(game.color)}">
-      <div class="tile-cover">
-        <img src="${esc(game.cover)}" alt="" loading="lazy" width="768" height="432" />
-      </div>
-      <div class="tile-body">
-        <img class="tile-icon" src="${esc(game.image)}" alt="" loading="lazy" width="512" height="512" />
-        <div class="tile-head">
-          <h3 class="tile-title">
-            <a href="${esc(game.url)}" target="_blank" rel="noopener noreferrer">${esc(game.title)}</a>
-          </h3>
-          <span class="chip">${esc(game.genre)}</span>
-        </div>
-        <p class="tile-desc">${esc(game.description)}</p>
-        <dl class="tile-stats">
-          <div><dt>Visits</dt><dd>${esc(stats.plays)}</dd></div>
-          <div><dt>Rating</dt><dd>${esc(stats.rating)}</dd></div>
-          <div><dt>Favorites</dt><dd>${esc(stats.favorites)}</dd></div>
-          ${playing > 0
-            ? `<div class="is-live"><dt>Playing now</dt><dd>${esc(fmtNum(playing))}</dd></div>`
-            : '<div class="is-none"><dt>Playing now</dt><dd aria-label="Not available">&ndash;</dd></div>'}
-        </dl>
-      </div>
-    </article>`;
+/* A single card left alone on the last row looks unfinished. When the
+   count and the number of columns would leave one, the first card takes
+   a full row instead (.gcard--wide in css/style.css). The column count is
+   read from the layout itself, so this follows the CSS breakpoints. */
+function balanceGrid(host) {
+  const cards = host.querySelectorAll('.gcard');
+  if (!cards.length) return;
+  const cols = getComputedStyle(host).gridTemplateColumns.split(' ').length;
+  cards.forEach((card, i) =>
+    card.classList.toggle('gcard--wide', i === 0 && cols > 1 && cards.length % cols === 1));
+}
+
+/* Home page: the leader on its own, then the rest in a grid. */
+const HOME_LIMIT = 6;
+
+function renderHome(ranked, rank) {
+  const lead = document.getElementById('flagship');
+  const grid = document.getElementById('gamesGrid');
+  if (!lead || !grid || !ranked.length) return;
+  setHTML(lead, flagshipCard(ranked[0]));
+  setHTML(grid, ranked.slice(1, 1 + HOME_LIMIT).map(g => gameCard(g, rank[g.placeId], false)).join(''));
 }
 
 /* Games page: say where the numbers came from. */
@@ -358,7 +425,7 @@ function renderSource(games, settled) {
 }
 
 /* ---------- games page state ---------- */
-const view = { genre: 'All', sort: 'visits', data: GAMES };
+const view = { genre: 'All', sort: 'visits', data: GAMES, rank: {} };
 
 // biggest first for every number, ties broken by visits; names A to Z
 const SORTS = {
@@ -373,11 +440,21 @@ function applyView() {
   const host = document.getElementById('gamesList');
   if (!host) return;
 
+  // sorting by players only makes sense while player counts are on show
+  const sortBy = document.getElementById('sortBy');
+  const byPlayers = sortBy && sortBy.querySelector('option[value="playing"]');
+  if (byPlayers) {
+    const on = hasPlayers(view.data);
+    byPlayers.hidden = byPlayers.disabled = !on;
+    if (!on && view.sort === 'playing') { view.sort = 'visits'; sortBy.value = 'visits'; }
+  }
+
   let list = view.data.slice();
   if (view.genre !== 'All') list = list.filter(g => g.genre === view.genre);
   list.sort(SORTS[view.sort] || SORTS.visits);
 
-  host.innerHTML = list.map(gameTile).join('');
+  setHTML(host, list.map(g => gameCard(g, view.rank[g.placeId], true)).join(''));
+  balanceGrid(host);
 
   const count = document.getElementById('resultCount');
   if (count) count.textContent = list.length === 1 ? '1 game' : `${list.length} games`;
@@ -410,25 +487,30 @@ function initGamesControls() {
       applyView();
     });
   }
+
+  // the number of columns changes with the width of the window
+  const list = document.getElementById('gamesList');
+  if (list && 'ResizeObserver' in window) new ResizeObserver(() => balanceGrid(list)).observe(list);
 }
 
 /* ---------- boot ---------- */
 (function init() {
-  const previewGrid = document.querySelector('[data-games-grid="preview"]');
   const onGamesPage = !!document.getElementById('gamesList');
 
   function paint(games, settled) {
-    const ranked = games.slice().sort(byVisits);
+    const shown  = forDisplay(games);
+    const ranked = shown.slice().sort(byVisits);
+    const rank   = {};
+    ranked.forEach((g, i) => { rank[g.placeId] = i + 1; });
 
-    if (previewGrid) {
-      renderFeatured(ranked[0]);
-      renderCards(previewGrid, ranked.slice(1, 5));
-    }
-    renderFigures(games);
+    renderWall(ranked);
+    renderHome(ranked, rank);
+    renderFigures(shown);
     renderSource(games, settled);
 
     if (onGamesPage) {
-      view.data = games;
+      view.data = shown;
+      view.rank = rank;
       applyView();
     }
   }

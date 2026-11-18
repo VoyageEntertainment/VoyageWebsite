@@ -5,60 +5,69 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Privacy | Voyage Interactive</title>
   <meta name="description" content="What this website collects, which third party services it contacts, and what we do with anything you send through the contact form." />
-  <meta name="theme-color" content="#fbf5ea" />
+  <meta name="theme-color" content="#07080b" />
   <meta name="robots" content="index, follow" />
-  <link rel="canonical" href="https://voyageinteractive.com/privacy.html" />
+  <link rel="canonical" href="https://voyage-interactive.com/privacy.html" />
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Unbounded:wght@600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300..900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
-  <script>
-    /* before first paint: the saved theme, else the system one */
-    (function (d) {
-      var t = null;
-      d.classList.add('js');
-      try { t = localStorage.getItem('voyage_theme'); } catch (e) {}
-      if (t !== 'light' && t !== 'dark') t = window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-      d.setAttribute('data-theme', t);
-      if (t === 'dark') document.querySelector('meta[name="theme-color"]').setAttribute('content', '#130f27');
-    })(document.documentElement);
-  </script>
 </head>
 <body>
 
+<!-- icons:start (generated from img/icons.svg, edit that file and run tools/sync-icons.mjs) -->
+<svg class="sprite" width="0" height="0" aria-hidden="true" focusable="false">
+  <symbol id="logo" viewBox="0 0 32 32"><path class="ink" d="M17 3v17h11z"/><path class="blk" d="M14 9v11H6z"/><path class="ink" d="M3 23h26l-3.2 5.1a2 2 0 0 1-1.7.9H7.9a2 2 0 0 1-1.7-.9z"/></symbol>
+  <symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-arrow-up-right" viewBox="0 0 24 24"><path d="M7 17 17 7M9 7h8v8"/></symbol>
+  <symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 8h16M4 16h16"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 4l9 16H3zM12 10v4M12 17h.01"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5h.01"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M4 7.5l8 5.5 8-5.5"/></symbol>
+  <symbol id="i-sort" viewBox="0 0 24 24"><path d="M4 7h16M4 12h11M4 17h6"/></symbol>
+  <symbol id="p-retention" viewBox="0 0 48 48"><path d="M7 7v34h34M12 12c1 10 6 17 16 17h4"/><rect class="blk" x="33" y="25" width="8" height="8" rx="1.5"/></symbol>
+  <symbol id="p-cadence" viewBox="0 0 48 48"><rect x="8" y="11" width="32" height="29" rx="4"/><path d="M8 19h32M16 7v8M32 7v8M16 27h.01M22 27h.01M16 34h.01M24 34h.01M32 34h.01"/><rect class="blk" x="28" y="23" width="8" height="8" rx="1.5"/></symbol>
+  <symbol id="p-tag" viewBox="0 0 48 48"><path d="M10 8h15l16 16-17 17L8 25V10a2 2 0 0 1 2-2zM15 15h.01"/><rect class="blk" x="21" y="21" width="8" height="8" rx="1.5"/></symbol>
+  <symbol id="p-community" viewBox="0 0 48 48"><path d="M11 9h26a4 4 0 0 1 4 4v16a4 4 0 0 1-4 4H21l-8 7v-7h-2a4 4 0 0 1-4-4V13a4 4 0 0 1 4-4z"/><path class="ink" d="M14 19h4v4h-4zM22 19h4v4h-4z"/><rect class="blk" x="30" y="19" width="4" height="4"/></symbol>
+  <symbol id="p-send" viewBox="0 0 48 48"><rect x="6" y="11" width="36" height="26" rx="4"/><path d="M7.5 14l12.5 9M40.5 14 28 23"/><rect class="blk" x="20" y="20" width="8" height="8" rx="1.5"/></symbol>
+  <symbol id="p-review" viewBox="0 0 48 48"><circle cx="21" cy="21" r="13"/><path d="M31 31l10 10"/><rect class="blk" x="17" y="17" width="8" height="8" rx="1.5"/></symbol>
+  <symbol id="p-offer" viewBox="0 0 48 48"><path d="M18 24h7l6-10h9M25 24l6 10h9M36 10l4 4-4 4M36 30l4 4-4 4"/><rect class="blk" x="7" y="19" width="10" height="10" rx="2"/></symbol>
+  <symbol id="p-handover" viewBox="0 0 48 48"><path d="M17 26V6M18 7l18 6-18 6"/><rect class="blk" x="9" y="27" width="16" height="16" rx="2.5"/></symbol>
+  <symbol id="p-shield" viewBox="0 0 48 48"><path d="M24 5l15 6v12c0 9-6 15.5-15 20-9-4.5-15-11-15-20V11z"/><rect class="blk" x="20" y="18" width="8" height="8" rx="1.5"/></symbol>
+  <symbol id="p-browser" viewBox="0 0 48 48"><rect x="6" y="9" width="36" height="30" rx="4"/><path d="M6 17h36M11 13h.01M15 13h.01M25 25h11M25 31h7"/><rect class="blk" x="12" y="23" width="8" height="8" rx="1.5"/></symbol>
+  <symbol id="p-network" viewBox="0 0 48 48"><rect x="7" y="7" width="6" height="6" rx="1.5"/><rect x="35" y="7" width="6" height="6" rx="1.5"/><rect x="21" y="37" width="6" height="6" rx="1.5"/><path d="M19 19l-6-6M29 19l6-6M24 29v8"/><rect class="blk" x="20" y="20" width="8" height="8" rx="1.5"/></symbol>
+</svg>
+<!-- icons:end -->
+
 <a class="skip-link" href="#main">Skip to content</a>
 
-<header class="header" id="header">
-  <div class="container header-inner">
-    <a href="index.html" class="brand" aria-label="Voyage Interactive, home">
-      <svg viewBox="0 0 32 32" aria-hidden="true">
-        <path d="M16 8l10.4 6L16 20 5.6 14z" fill="#6f8bff"/>
-        <path d="M5.6 14L16 20v12L5.6 26z" fill="#3b5bf5"/>
-        <path d="M26.4 14L16 20v12l10.4-6z" fill="#2a43cf"/>
-        <path d="M16 14V2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        <path d="M17 1.6l8.6 3.1L17 7.8z" fill="#ffc93c"/>
-      </svg>
-      Voyage
+<header class="nav-bar" id="header">
+  <a href="index.html" class="brand" aria-label="Voyage Interactive, home">
+    <svg class="icon brand-mark" aria-hidden="true"><use href="#logo"/></svg>
+    <span class="brand-name">Voyage <span>Interactive</span></span>
+  </a>
+
+  <nav class="nav-links" aria-label="Primary">
+    <a href="games.html">Games</a>
+    <a href="index.html#studio">Studio</a>
+    <a href="index.html#acquisitions">Sell your game</a>
+    <a href="index.html#faq">FAQ</a>
+  </nav>
+
+  <div class="nav-actions">
+    <a href="index.html#contact" class="btn btn--primary btn--sm">
+      Get an offer
+      <svg class="icon" aria-hidden="true"><use href="#i-arrow-up-right"/></svg>
     </a>
-
-    <nav class="nav" aria-label="Primary">
-      <a href="games.html">Games</a>
-      <a href="index.html#studio">Studio</a>
-      <a href="index.html#acquisitions">Sell your game</a>
-      <a href="index.html#faq">FAQ</a>
-    </nav>
-
-    <div class="header-actions">
-      <button class="icon-btn theme-toggle" type="button" data-theme-toggle aria-pressed="false" aria-label="Dark theme">
-        <svg class="icon-moon" width="20" height="20" viewBox="0 1 10 10" fill="currentColor" aria-hidden="true"><path d="M2 1h2v1H2zM1 2h2v1H1zM1 3h2v1H1zM0 4h4v1H0zM0 5h4v1H0zM0 6h5v1H0zM1 7h6v1H1zM1 8h9v1H1zM2 9h7v1H2zM4 10h3v1H4z"/></svg>
-        <svg class="icon-sun" width="18" height="18" viewBox="0 0 9 9" fill="currentColor" aria-hidden="true"><path d="M4 0h1v1H4zM1 1h1v1H1zM7 1h1v1H7zM3 2h3v1H3zM2 3h5v1H2zM0 4h1v1H0zM2 4h5v1H2zM8 4h1v1H8zM2 5h5v1H2zM3 6h3v1H3zM1 7h1v1H1zM7 7h1v1H7zM4 8h1v1H4z"/></svg>
-      </button>
-      <a href="index.html#contact" class="btn btn--primary btn--sm">Get an offer</a>
-      <button class="icon-btn menu-toggle" id="menuToggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobileNav">
-        <span></span>
-      </button>
-    </div>
+    <button class="icon-btn menu-toggle" type="button" id="menuToggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobileNav">
+      <svg class="icon icon-menu" aria-hidden="true"><use href="#i-menu"/></svg>
+      <svg class="icon icon-close" aria-hidden="true"><use href="#i-close"/></svg>
+    </button>
   </div>
 </header>
 
@@ -74,93 +83,137 @@
   <section class="page-head">
     <div class="container">
       <p class="kicker">Privacy</p>
-      <h1>What this site collects</h1>
+      <h1>What this site <span class="accent">collects.</span></h1>
       <p class="lede">
         A plain description of every piece of data this website handles and every third
-        party it contacts. Last reviewed September 2026.
+        party it contacts. Last reviewed November 2026.
       </p>
+
+      <!-- the short version; the card below gives the detail -->
+      <ul class="features" aria-label="Summary">
+        <li class="feature">
+          <span class="pict"><svg class="icon" aria-hidden="true"><use href="#p-shield"/></svg></span>
+          <h2 class="h3">No cookies, no tracking</h2>
+          <p>No analytics, advertising or tracking scripts run on this site.</p>
+        </li>
+        <li class="feature">
+          <span class="pict"><svg class="icon" aria-hidden="true"><use href="#p-send"/></svg></span>
+          <h2 class="h3">The contact form</h2>
+          <p>Delivered to our inbox through Formspree and used only to reply to you.</p>
+        </li>
+        <li class="feature">
+          <span class="pict"><svg class="icon" aria-hidden="true"><use href="#p-browser"/></svg></span>
+          <h2 class="h3">Kept in your browser</h2>
+          <p>A short-lived copy of the public game statistics, and nothing else.</p>
+        </li>
+        <li class="feature">
+          <span class="pict"><svg class="icon" aria-hidden="true"><use href="#p-network"/></svg></span>
+          <h2 class="h3">Services contacted</h2>
+          <p>Google Fonts, Roblox by way of four proxies, and Formspree.</p>
+        </li>
+      </ul>
     </div>
   </section>
 
-  <section class="section section--flush">
+  <section class="section">
     <div class="container">
-      <div class="prose">
+      <div class="policy">
 
-      <h2>Analytics and cookies</h2>
-      <p>
-        This site sets no cookies and runs no analytics, advertising or tracking scripts.
-        We do not build a profile of you and we have no visitor dashboard.
-      </p>
+        <div class="policy-row">
+          <h2>Analytics and cookies</h2>
+          <div class="prose">
+            <p>
+              This site sets no cookies and runs no analytics, advertising or tracking scripts.
+              We do not build a profile of you and we have no visitor dashboard.
+            </p>
+          </div>
+        </div>
 
-      <h2>The contact form</h2>
-      <p>
-        When you submit the form on the contact section, the name, email address, game link
-        and message you typed are sent to Formspree, which delivers them to our inbox.
-        Formspree processes the submission on our behalf and its own privacy policy applies
-        to that step.
-      </p>
-      <p>
-        We use what you send only to reply to you and to evaluate a game if you are offering
-        one. We do not sell it, and we do not add you to a mailing list. If you want your
-        message and our copy of it deleted, email us and we will remove it.
-      </p>
-      <p>
-        The form asks you to confirm that you are 13 or older. We do not knowingly collect
-        information from children under 13.
-      </p>
+        <div class="policy-row">
+          <h2>The contact form</h2>
+          <div class="prose">
+            <p>
+              When you submit the form on the contact section, the name, email address, game link
+              and message you typed are sent to Formspree, which delivers them to our inbox.
+              Formspree processes the submission on our behalf and its own privacy policy applies
+              to that step.
+            </p>
+            <p>
+              We use what you send only to reply to you and to evaluate a game if you are offering
+              one. We do not sell it, and we do not add you to a mailing list. If you want your
+              message and our copy of it deleted, email us and we will remove it.
+            </p>
+            <p>
+              The form asks you to confirm that you are 13 or older. We do not knowingly collect
+              information from children under 13.
+            </p>
+          </div>
+        </div>
 
-      <h2>Data stored in your browser</h2>
-      <p>
-        To avoid re-fetching the same numbers on every page view, the site keeps a copy of
-        the public Roblox statistics in your browser under the local storage key
-        <code>voyage_live_stats</code>. It expires after 30 minutes, contains no personal
-        information, and never leaves your device.
-      </p>
-      <p>
-        If you switch between the light and dark theme, your choice is saved under
-        <code>voyage_theme</code> as the word <code>light</code> or <code>dark</code>, so
-        the next page opens the same way. Clearing your site data removes both.
-      </p>
+        <div class="policy-row">
+          <h2>Data stored in your browser</h2>
+          <div class="prose">
+            <p>
+              To avoid re-fetching the same numbers on every page view, the site keeps a copy of
+              the public Roblox statistics in your browser under the local storage key
+              <code>voyage_live_stats</code>. It expires after 30 minutes, contains no personal
+              information, and never leaves your device. Clearing your site data removes it.
+            </p>
+          </div>
+        </div>
 
-      <h2>Third parties your browser contacts</h2>
-      <ul>
-        <li>
-          <b>Google Fonts</b> serves the typefaces from <code>fonts.googleapis.com</code>
-          and <code>fonts.gstatic.com</code>. Your IP address is visible to Google as part
-          of that request.
-        </li>
-        <li>
-          <b>Roblox</b> provides the visit, favorite and concurrent player counts through
-          its public games API.
-        </li>
-        <li>
-          <b>CORS proxies</b> relay that Roblox request, because the API does not allow
-          direct browser calls. The site tries <code>corsproxy.io</code>,
-          <code>api.allorigins.win</code> and <code>api.codetabs.com</code>, and uses
-          whichever answers first. These requests carry no personal data beyond what any
-          HTTP request exposes.
-        </li>
-        <li>
-          <b>Formspree</b> receives contact form submissions, as described above.
-        </li>
-      </ul>
-      <p>
-        Nothing on this page is under our control once it reaches those services, so their
-        own policies govern what they do with it.
-      </p>
+        <div class="policy-row">
+          <h2>Third parties your browser contacts</h2>
+          <div class="prose">
+            <ul>
+              <li>
+                <b>Google Fonts</b> serves the typeface from <code>fonts.googleapis.com</code>
+                and <code>fonts.gstatic.com</code>. Your IP address is visible to Google as part
+                of that request.
+              </li>
+              <li>
+                <b>Roblox</b> provides the visit, favorite and concurrent player counts through
+                its public games API.
+              </li>
+              <li>
+                <b>Proxies</b> relay that Roblox request, because the API does not allow
+                direct browser calls. The site tries <code>games.roproxy.com</code>, a mirror
+                of the Roblox API, along with <code>corsproxy.io</code>,
+                <code>api.allorigins.win</code> and <code>api.codetabs.com</code>, and uses
+                whichever answers first. These requests carry no personal data beyond what any
+                HTTP request exposes.
+              </li>
+              <li>
+                <b>Formspree</b> receives contact form submissions, as described above.
+              </li>
+            </ul>
+            <p>
+              Nothing on this page is under our control once it reaches those services, so their
+              own policies govern what they do with it.
+            </p>
+          </div>
+        </div>
 
-      <h2>Links to Roblox</h2>
-      <p>
-        Game cards link out to roblox.com. Once you follow one of those links you are on
-        Roblox and its terms and privacy policy apply. Voyage Interactive is not affiliated
-        with or endorsed by Roblox Corporation.
-      </p>
+        <div class="policy-row">
+          <h2>Links to Roblox</h2>
+          <div class="prose">
+            <p>
+              Game cards link out to roblox.com. Once you follow one of those links you are on
+              Roblox and its terms and privacy policy apply. Voyage Interactive is not affiliated
+              with or endorsed by Roblox Corporation.
+            </p>
+          </div>
+        </div>
 
-      <h2>Contact</h2>
-      <p>
-        Questions about any of this, or a request to delete something you sent us, go to
-        <a href="mailto:voyagenoirtype@gmail.com">voyagenoirtype@gmail.com</a>.
-      </p>
+        <div class="policy-row">
+          <h2>Contact</h2>
+          <div class="prose">
+            <p>
+              Questions about any of this, or a request to delete something you sent us, go to
+              <a href="mailto:voyagenoirtype@gmail.com">voyagenoirtype@gmail.com</a>.
+            </p>
+          </div>
+        </div>
 
       </div>
     </div>
@@ -171,44 +224,36 @@
   <div class="container footer-top">
     <div class="footer-brand">
       <a href="index.html" class="brand" aria-label="Voyage Interactive, home">
-        <svg viewBox="0 0 32 32" aria-hidden="true">
-          <path d="M16 8l10.4 6L16 20 5.6 14z" fill="#6f8bff"/>
-          <path d="M5.6 14L16 20v12L5.6 26z" fill="#3b5bf5"/>
-          <path d="M26.4 14L16 20v12l10.4-6z" fill="#2a43cf"/>
-          <path d="M16 14V2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-          <path d="M17 1.6l8.6 3.1L17 7.8z" fill="#ffc93c"/>
-        </svg>
-        Voyage Interactive
+        <svg class="icon brand-mark" aria-hidden="true"><use href="#logo"/></svg>
+        <span class="brand-name">Voyage <span>Interactive</span></span>
       </a>
       <p>A Roblox studio building original experiences and acquiring games from independent creators.</p>
     </div>
 
     <div class="footer-col">
-      <h4>Studio</h4>
+      <h4 class="label">Studio</h4>
       <a href="games.html">Games</a>
       <a href="index.html#studio">About</a>
       <a href="mailto:voyagenoirtype@gmail.com?subject=Working%20with%20Voyage">Careers</a>
     </div>
 
     <div class="footer-col">
-      <h4>Sellers</h4>
+      <h4 class="label">Sellers</h4>
       <a href="index.html#acquisitions">How it works</a>
       <a href="index.html#faq">FAQ</a>
       <a href="index.html#contact">Get an offer</a>
     </div>
 
     <div class="footer-col">
-      <h4>More</h4>
+      <h4 class="label">More</h4>
       <a href="privacy.html" aria-current="page">Privacy</a>
       <a href="mailto:voyagenoirtype@gmail.com">Email us</a>
     </div>
   </div>
 
-  <div class="footer-bottom">
-    <div class="container">
-      <p>&copy; <span id="year">2026</span> Voyage Interactive</p>
-      <p>Not affiliated with or endorsed by Roblox Corporation</p>
-    </div>
+  <div class="container footer-bottom">
+    <p>&copy; <span id="year">2026</span> Voyage Interactive</p>
+    <p>Not affiliated with or endorsed by Roblox Corporation</p>
   </div>
 </footer>
 

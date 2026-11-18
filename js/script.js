@@ -1,59 +1,8 @@
 'use strict';
 
-const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-/* =============================================================
-   Theme. The inline script in <head> has already applied the
-   saved choice, or the system setting, before first paint.
-   ============================================================= */
-(function themeToggle() {
-  const root    = document.documentElement;
-  const meta    = document.querySelector('meta[name="theme-color"]');
-  const buttons = document.querySelectorAll('[data-theme-toggle]');
-  const KEY     = 'voyage_theme';
-
-  const apply = (theme) => {
-    root.setAttribute('data-theme', theme);
-    if (meta) meta.setAttribute('content', theme === 'dark' ? '#130f27' : '#fbf5ea');
-    buttons.forEach(b => b.setAttribute('aria-pressed', String(theme === 'dark')));
-  };
-
-  apply(root.getAttribute('data-theme') === 'dark' ? 'dark' : 'light');
-
-  buttons.forEach(b => b.addEventListener('click', () => {
-    const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-    apply(next);
-    try { localStorage.setItem(KEY, next); } catch { /* storage blocked, still switches */ }
-  }));
-
-  // keep following the system until the visitor picks a theme
-  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-    let saved = null;
-    try { saved = localStorage.getItem(KEY); } catch { /* ignore */ }
-    if (saved !== 'light' && saved !== 'dark') apply(e.matches ? 'dark' : 'light');
-  });
-})();
-
-/* =============================================================
-   Header: background appears once the page has scrolled
-   ============================================================= */
-(function stickyHeader() {
-  const header = document.getElementById('header');
-  if (!header) return;
-
-  let ticking = false;
-  const update = () => {
-    header.classList.toggle('is-stuck', window.scrollY > 8);
-    ticking = false;
-  };
-
-  update();
-  window.addEventListener('scroll', () => {
-    if (ticking) return;
-    ticking = true;
-    requestAnimationFrame(update);
-  }, { passive: true });
-})();
+// The site used to offer a light and a dark theme and remembered the
+// choice here. It has one look now, so drop what an earlier visit left.
+try { localStorage.removeItem('voyage_theme'); } catch { /* storage blocked */ }
 
 /* =============================================================
    Mobile navigation
@@ -104,11 +53,15 @@ const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').match
   if (!form) return;
 
   const button = document.getElementById('submitBtn');
+  const label  = button.querySelector('span');
   const status = document.getElementById('formStatus');
+  const text   = status.querySelector('span');
   const ENDPOINT = 'https://formspree.io/f/mdabqwzz';
 
+  // state: 'ok', 'error', or nothing for a neutral progress note
   const say = (message, state) => {
-    status.textContent = message;
+    text.textContent = message;
+    status.hidden = !message;
     if (state) status.setAttribute('data-state', state);
     else status.removeAttribute('data-state');
   };
@@ -133,7 +86,7 @@ const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').match
     };
 
     button.disabled = true;
-    button.textContent = 'Sending';
+    label.textContent = 'Sending';
     say('Sending your message.');
 
     try {
@@ -153,32 +106,9 @@ const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').match
       say('Network error. Email voyagenoirtype@gmail.com and we will pick it up there.', 'error');
     } finally {
       button.disabled = false;
-      button.textContent = 'Send message';
+      label.textContent = 'Send message';
     }
   });
-})();
-
-/* =============================================================
-   Blocks rise into place the first time they scroll into view
-   ============================================================= */
-(function reveal() {
-  const targets = document.querySelectorAll('.reveal');
-  if (!targets.length) return;
-
-  if (reduceMotion || !('IntersectionObserver' in window)) {
-    targets.forEach(el => el.classList.add('is-in'));
-    return;
-  }
-
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (!entry.isIntersecting) return;
-      entry.target.classList.add('is-in');
-      io.unobserve(entry.target);
-    });
-  }, { rootMargin: '0px 0px -8% 0px', threshold: 0.1 });
-
-  targets.forEach(el => io.observe(el));
 })();
 
 /* =============================================================

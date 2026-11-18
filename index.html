@@ -5,72 +5,84 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Voyage Interactive | Roblox game studio and acquisitions</title>
   <meta name="description" content="Voyage Interactive builds original Roblox experiences and acquires games from independent developers, then runs the development, updates and marketing that grow them." />
-  <meta name="theme-color" content="#fbf5ea" />
-  <link rel="canonical" href="https://voyageinteractive.com/" />
+  <meta name="theme-color" content="#07080b" />
+  <link rel="canonical" href="https://voyage-interactive.com/" />
 
   <meta property="og:type"        content="website" />
   <meta property="og:site_name"   content="Voyage Interactive" />
-  <meta property="og:url"         content="https://voyageinteractive.com/" />
+  <meta property="og:url"         content="https://voyage-interactive.com/" />
   <meta property="og:title"       content="Voyage Interactive | Roblox game studio and acquisitions" />
   <meta property="og:description" content="We build original Roblox experiences and acquire games from independent creators, then run the development, updates and marketing that grow them." />
-  <meta property="og:image"       content="https://voyageinteractive.com/preview.png" />
+  <meta property="og:image"       content="https://voyage-interactive.com/preview.png" />
+  <meta property="og:image:width"  content="1200" />
+  <meta property="og:image:height" content="630" />
 
   <meta name="twitter:card"        content="summary_large_image" />
   <meta name="twitter:title"       content="Voyage Interactive | Roblox game studio and acquisitions" />
   <meta name="twitter:description" content="We build original Roblox experiences and acquire games from independent creators." />
-  <meta name="twitter:image"       content="https://voyageinteractive.com/preview.png" />
+  <meta name="twitter:image"       content="https://voyage-interactive.com/preview.png" />
 
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Unbounded:wght@600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300..900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
-  <script>
-    /* before first paint: the saved theme, else the system one */
-    (function (d) {
-      var t = null;
-      d.classList.add('js');
-      try { t = localStorage.getItem('voyage_theme'); } catch (e) {}
-      if (t !== 'light' && t !== 'dark') t = window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-      d.setAttribute('data-theme', t);
-      if (t === 'dark') document.querySelector('meta[name="theme-color"]').setAttribute('content', '#130f27');
-    })(document.documentElement);
-  </script>
+  <noscript><style>.hero-wall, #flagship, .games-grid { display: none; }</style></noscript>
 </head>
 <body>
 
+<!-- icons:start (generated from img/icons.svg, edit that file and run tools/sync-icons.mjs) -->
+<svg class="sprite" width="0" height="0" aria-hidden="true" focusable="false">
+  <symbol id="logo" viewBox="0 0 32 32"><path class="ink" d="M17 3v17h11z"/><path class="blk" d="M14 9v11H6z"/><path class="ink" d="M3 23h26l-3.2 5.1a2 2 0 0 1-1.7.9H7.9a2 2 0 0 1-1.7-.9z"/></symbol>
+  <symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-arrow-up-right" viewBox="0 0 24 24"><path d="M7 17 17 7M9 7h8v8"/></symbol>
+  <symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 8h16M4 16h16"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 4l9 16H3zM12 10v4M12 17h.01"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5h.01"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M4 7.5l8 5.5 8-5.5"/></symbol>
+  <symbol id="i-sort" viewBox="0 0 24 24"><path d="M4 7h16M4 12h11M4 17h6"/></symbol>
+  <symbol id="p-retention" viewBox="0 0 48 48"><path d="M7 7v34h34M12 12c1 10 6 17 16 17h4"/><rect class="blk" x="33" y="25" width="8" height="8" rx="1.5"/></symbol>
+  <symbol id="p-cadence" viewBox="0 0 48 48"><rect x="8" y="11" width="32" height="29" rx="4"/><path d="M8 19h32M16 7v8M32 7v8M16 27h.01M22 27h.01M16 34h.01M24 34h.01M32 34h.01"/><rect class="blk" x="28" y="23" width="8" height="8" rx="1.5"/></symbol>
+  <symbol id="p-tag" viewBox="0 0 48 48"><path d="M10 8h15l16 16-17 17L8 25V10a2 2 0 0 1 2-2zM15 15h.01"/><rect class="blk" x="21" y="21" width="8" height="8" rx="1.5"/></symbol>
+  <symbol id="p-community" viewBox="0 0 48 48"><path d="M11 9h26a4 4 0 0 1 4 4v16a4 4 0 0 1-4 4H21l-8 7v-7h-2a4 4 0 0 1-4-4V13a4 4 0 0 1 4-4z"/><path class="ink" d="M14 19h4v4h-4zM22 19h4v4h-4z"/><rect class="blk" x="30" y="19" width="4" height="4"/></symbol>
+  <symbol id="p-send" viewBox="0 0 48 48"><rect x="6" y="11" width="36" height="26" rx="4"/><path d="M7.5 14l12.5 9M40.5 14 28 23"/><rect class="blk" x="20" y="20" width="8" height="8" rx="1.5"/></symbol>
+  <symbol id="p-review" viewBox="0 0 48 48"><circle cx="21" cy="21" r="13"/><path d="M31 31l10 10"/><rect class="blk" x="17" y="17" width="8" height="8" rx="1.5"/></symbol>
+  <symbol id="p-offer" viewBox="0 0 48 48"><path d="M18 24h7l6-10h9M25 24l6 10h9M36 10l4 4-4 4M36 30l4 4-4 4"/><rect class="blk" x="7" y="19" width="10" height="10" rx="2"/></symbol>
+  <symbol id="p-handover" viewBox="0 0 48 48"><path d="M17 26V6M18 7l18 6-18 6"/><rect class="blk" x="9" y="27" width="16" height="16" rx="2.5"/></symbol>
+  <symbol id="p-shield" viewBox="0 0 48 48"><path d="M24 5l15 6v12c0 9-6 15.5-15 20-9-4.5-15-11-15-20V11z"/><rect class="blk" x="20" y="18" width="8" height="8" rx="1.5"/></symbol>
+  <symbol id="p-browser" viewBox="0 0 48 48"><rect x="6" y="9" width="36" height="30" rx="4"/><path d="M6 17h36M11 13h.01M15 13h.01M25 25h11M25 31h7"/><rect class="blk" x="12" y="23" width="8" height="8" rx="1.5"/></symbol>
+  <symbol id="p-network" viewBox="0 0 48 48"><rect x="7" y="7" width="6" height="6" rx="1.5"/><rect x="35" y="7" width="6" height="6" rx="1.5"/><rect x="21" y="37" width="6" height="6" rx="1.5"/><path d="M19 19l-6-6M29 19l6-6M24 29v8"/><rect class="blk" x="20" y="20" width="8" height="8" rx="1.5"/></symbol>
+</svg>
+<!-- icons:end -->
+
 <a class="skip-link" href="#main">Skip to content</a>
 
-<header class="header" id="header">
-  <div class="container header-inner">
-    <a href="index.html" class="brand" aria-label="Voyage Interactive, home">
-      <svg viewBox="0 0 32 32" aria-hidden="true">
-        <path d="M16 8l10.4 6L16 20 5.6 14z" fill="#6f8bff"/>
-        <path d="M5.6 14L16 20v12L5.6 26z" fill="#3b5bf5"/>
-        <path d="M26.4 14L16 20v12l10.4-6z" fill="#2a43cf"/>
-        <path d="M16 14V2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        <path d="M17 1.6l8.6 3.1L17 7.8z" fill="#ffc93c"/>
-      </svg>
-      Voyage
+<header class="nav-bar" id="header">
+  <a href="index.html" class="brand" aria-label="Voyage Interactive, home">
+    <svg class="icon brand-mark" aria-hidden="true"><use href="#logo"/></svg>
+    <span class="brand-name">Voyage <span>Interactive</span></span>
+  </a>
+
+  <nav class="nav-links" aria-label="Primary">
+    <a href="games.html">Games</a>
+    <a href="#studio">Studio</a>
+    <a href="#acquisitions">Sell your game</a>
+    <a href="#faq">FAQ</a>
+  </nav>
+
+  <div class="nav-actions">
+    <a href="#contact" class="btn btn--primary btn--sm">
+      Get an offer
+      <svg class="icon" aria-hidden="true"><use href="#i-arrow-up-right"/></svg>
     </a>
-
-    <nav class="nav" aria-label="Primary">
-      <a href="games.html">Games</a>
-      <a href="#studio">Studio</a>
-      <a href="#acquisitions">Sell your game</a>
-      <a href="#faq">FAQ</a>
-    </nav>
-
-    <div class="header-actions">
-      <button class="icon-btn theme-toggle" type="button" data-theme-toggle aria-pressed="false" aria-label="Dark theme">
-        <svg class="icon-moon" width="20" height="20" viewBox="0 1 10 10" fill="currentColor" aria-hidden="true"><path d="M2 1h2v1H2zM1 2h2v1H1zM1 3h2v1H1zM0 4h4v1H0zM0 5h4v1H0zM0 6h5v1H0zM1 7h6v1H1zM1 8h9v1H1zM2 9h7v1H2zM4 10h3v1H4z"/></svg>
-        <svg class="icon-sun" width="18" height="18" viewBox="0 0 9 9" fill="currentColor" aria-hidden="true"><path d="M4 0h1v1H4zM1 1h1v1H1zM7 1h1v1H7zM3 2h3v1H3zM2 3h5v1H2zM0 4h1v1H0zM2 4h5v1H2zM8 4h1v1H8zM2 5h5v1H2zM3 6h3v1H3zM1 7h1v1H1zM7 7h1v1H7zM4 8h1v1H4z"/></svg>
-      </button>
-      <a href="#contact" class="btn btn--primary btn--sm">Get an offer</a>
-      <button class="icon-btn menu-toggle" id="menuToggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobileNav">
-        <span></span>
-      </button>
-    </div>
+    <button class="icon-btn menu-toggle" type="button" id="menuToggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobileNav">
+      <svg class="icon icon-menu" aria-hidden="true"><use href="#i-menu"/></svg>
+      <svg class="icon icon-close" aria-hidden="true"><use href="#i-close"/></svg>
+    </button>
   </div>
 </header>
 
@@ -86,127 +98,75 @@
 
   <!-- ============ HERO ============ -->
   <section class="hero">
-    <div class="container hero-grid">
-      <div class="hero-copy">
-        <p class="kicker">Roblox game studio</p>
-        <h1>We build<br /> Roblox games.<br /> <span class="accent">And we buy them.</span></h1>
+    <!-- The games' art, scattered behind the title. Dealt out by
+         js/games-data.js from the GAMES list; purely decorative. -->
+    <div class="hero-wall" id="heroWall" aria-hidden="true"></div>
 
-        <p class="lede">
-          Voyage Interactive develops original Roblox experiences and acquires games from
-          independent creators. After an acquisition our team takes over development, live
-          updates and marketing, so the game keeps growing instead of going quiet.
-        </p>
+    <div class="container hero-inner">
+      <h1><span>We build</span> <span>Roblox games.</span> <span class="accent">And we buy them.</span></h1>
 
-        <div class="hero-actions">
-          <a href="#contact" class="btn btn--primary">
-            Sell us your game
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h9.5M8.5 4 12.5 8l-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </a>
-          <a href="#portfolio" class="btn btn--ghost">See our games</a>
+      <p class="lede">
+        Voyage Interactive develops original Roblox experiences and acquires games from
+        independent creators. After an acquisition our team takes over development, live
+        updates and marketing, so the game keeps growing instead of going quiet.
+      </p>
+
+      <div class="hero-actions">
+        <a href="#contact" class="btn btn--primary">
+          Sell your game
+          <svg class="icon" aria-hidden="true"><use href="#i-arrow-up-right"/></svg>
+        </a>
+        <a href="#portfolio" class="btn">See our games</a>
+      </div>
+
+      <!-- recorded totals; js/games-data.js swaps in live numbers -->
+      <dl class="stats">
+        <div class="stat">
+          <dt class="label">Total visits</dt>
+          <dd data-figure="visits">58.9M</dd>
         </div>
-
-        <!-- recorded totals; js/games-data.js swaps in live numbers -->
-        <dl class="stats">
-          <div class="stat"><dt>Total visits</dt><dd data-figure="visits">58.9M</dd></div>
-          <div class="stat"><dt>Favorites</dt><dd data-figure="favorites">2.7M</dd></div>
-          <div class="stat"><dt>Live games</dt><dd data-figure="games">7</dd></div>
-          <div class="stat stat--live" data-live hidden><dt>Playing now</dt><dd data-figure="playing"></dd></div>
-        </dl>
-      </div>
-
-      <!-- Hand-placed: x, y and s (edge) are in % of the column width.
-           Keep in step with GAMES in js/games-data.js. -->
-      <div class="hero-art" role="group" aria-label="Our games">
-        <a class="cube" href="https://www.roblox.com/games/131666238350869/Explode-a-Brainrot" target="_blank" rel="noopener noreferrer"
-           aria-label="Explode a Brainrot on Roblox" style="--x:42;--y:2;--s:11;--z:1;--i:5;--d:-2.2s;--top:#ff9a3d;--right:#cc682c">
-          <span class="cube-body">
-            <span class="cube-face cube-left"><img src="img/games/explode-a-brainrot.webp" alt="" width="512" height="512" /></span>
-            <span class="cube-face cube-top"></span>
-            <span class="cube-face cube-right"></span>
-          </span>
-          <span class="cube-tag">Explode a Brainrot</span>
-        </a>
-        <a class="cube" href="https://www.roblox.com/games/119749960243257/Brainrot-Balloon" target="_blank" rel="noopener noreferrer"
-           aria-label="Brainrot Balloon on Roblox" style="--x:66;--y:4;--s:16;--z:2;--i:2;--d:-4.6s;--top:#a98bff;--right:#6f64ca">
-          <span class="cube-body">
-            <span class="cube-face cube-left"><img src="img/games/brainrot-balloon.webp" alt="" width="512" height="512" /></span>
-            <span class="cube-face cube-top"></span>
-            <span class="cube-face cube-right"></span>
-          </span>
-          <span class="cube-tag">Brainrot Balloon</span>
-        </a>
-        <a class="cube" href="https://www.roblox.com/games/95275361430060/Steal-a-Mob" target="_blank" rel="noopener noreferrer"
-           aria-label="Steal a Mob on Roblox" style="--x:6;--y:12;--s:17;--z:3;--i:1;--d:-1.1s;--top:#5b6cf0;--right:#4d38b0">
-          <span class="cube-body">
-            <span class="cube-face cube-left"><img src="img/games/steal-a-mob.webp" alt="" width="512" height="512" /></span>
-            <span class="cube-face cube-top"></span>
-            <span class="cube-face cube-right"></span>
-          </span>
-          <span class="cube-tag">Steal a Mob</span>
-        </a>
-        <a class="cube" href="https://www.roblox.com/games/117782023218098/Kick-a-Brainrot" target="_blank" rel="noopener noreferrer"
-           aria-label="Kick a Brainrot on Roblox" style="--x:28;--y:26;--s:26;--z:4;--i:0;--d:-3.4s;--top:#ff5a4e;--right:#c22a45">
-          <span class="cube-body">
-            <span class="cube-face cube-left"><img src="img/games/kick-a-brainrot.webp" alt="" width="512" height="512" fetchpriority="high" /></span>
-            <span class="cube-face cube-top"></span>
-            <span class="cube-face cube-right"></span>
-          </span>
-          <span class="cube-tag">Kick a Brainrot</span>
-        </a>
-        <a class="cube" href="https://www.roblox.com/games/103134341448025/Grow-Trees-For-Brainrots" target="_blank" rel="noopener noreferrer"
-           aria-label="Grow Trees for Brainrots on Roblox" style="--x:72;--y:50;--s:15;--z:5;--i:3;--d:-5.3s;--top:#5cc45e;--right:#0f9355">
-          <span class="cube-body">
-            <span class="cube-face cube-left"><img src="img/games/grow-trees.webp" alt="" width="512" height="512" /></span>
-            <span class="cube-face cube-top"></span>
-            <span class="cube-face cube-right"></span>
-          </span>
-          <span class="cube-tag">Grow Trees for Brainrots</span>
-        </a>
-        <a class="cube" href="https://www.roblox.com/games/81776530583332/Dont-Move-For-Brainrots" target="_blank" rel="noopener noreferrer"
-           aria-label="Dont Move For Brainrots on Roblox" style="--x:4;--y:58;--s:14;--z:6;--i:4;--d:-0.4s;--top:#e8b531;--right:#be810d">
-          <span class="cube-body">
-            <span class="cube-face cube-left"><img src="img/games/dont-move-for-brainrots.webp" alt="" width="512" height="512" /></span>
-            <span class="cube-face cube-top"></span>
-            <span class="cube-face cube-right"></span>
-          </span>
-          <span class="cube-tag">Dont Move For Brainrots</span>
-        </a>
-        <a class="cube" href="https://www.roblox.com/games/123506026934679/Brainrot-Disaster-Survival" target="_blank" rel="noopener noreferrer"
-           aria-label="Brainrot Disaster Survival on Roblox" style="--x:46;--y:76;--s:11;--z:7;--i:6;--d:-6s;--top:#46b3f5;--right:#397fc2">
-          <span class="cube-body">
-            <span class="cube-face cube-left"><img src="img/games/brainrot-disaster-survival.webp" alt="" width="512" height="512" /></span>
-            <span class="cube-face cube-top"></span>
-            <span class="cube-face cube-right"></span>
-          </span>
-          <span class="cube-tag">Brainrot Disaster Survival</span>
-        </a>
-      </div>
+        <div class="stat">
+          <dt class="label">Favorites</dt>
+          <dd data-figure="favorites">2.6M</dd>
+        </div>
+        <div class="stat">
+          <dt class="label">Live games</dt>
+          <dd data-figure="games">7</dd>
+        </div>
+        <div class="stat stat--live" data-live hidden>
+          <dt class="label">Playing now</dt>
+          <dd data-figure="playing"></dd>
+        </div>
+      </dl>
     </div>
   </section>
 
-  <!-- ============ PORTFOLIO ============ -->
+  <!-- ============ GAMES ============ -->
   <section class="section" id="portfolio">
     <div class="container">
-      <div class="section-head reveal">
-        <div>
-          <p class="kicker">Portfolio</p>
-          <h2>Games we run</h2>
-        </div>
-        <p class="lede">
-          Visits, favorites and concurrent players are read from the public Roblox API
-          when the page loads. If the API is unreachable, the last recorded values are
-          shown instead.
-        </p>
-      </div>
+      <header class="section-head">
+        <p class="kicker">Portfolio</p>
+        <h2>Games we <span class="accent">run.</span></h2>
+        <p class="lede">Every title we operate, ranked by total visits. Each card opens the game on Roblox.</p>
+      </header>
 
-      <div id="featuredGame"></div>
-      <div class="game-grid" data-games-grid="preview"></div>
+      <div id="flagship"></div>
+      <div class="games-grid" id="gamesGrid"></div>
+      <noscript><p class="note">The game list is built with JavaScript. <a class="text-link" href="games.html">Open the games page</a> once it is enabled.</p></noscript>
 
       <div class="section-foot">
-        <a href="games.html" class="btn btn--ghost">
-          See every game
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h9.5M8.5 4 12.5 8l-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <a href="games.html" class="btn">
+          Every game in detail
+          <svg class="icon icon--along" aria-hidden="true"><use href="#i-arrow-right"/></svg>
         </a>
+        <p class="note">
+          <svg class="icon" aria-hidden="true"><use href="#i-info"/></svg>
+          <span>
+            Visits, favorites and player counts are read from the public Roblox API when the
+            page loads. If it cannot be reached, the last recorded values are shown. Ratings
+            are recorded by hand.
+          </span>
+        </p>
       </div>
     </div>
   </section>
@@ -214,50 +174,50 @@
   <!-- ============ STUDIO ============ -->
   <section class="section" id="studio">
     <div class="container">
-      <div class="studio-intro reveal">
+      <div class="studio">
         <div>
           <p class="kicker">The studio</p>
-          <h2>A small team that ships every week</h2>
+          <h2>A small team that <span class="accent">ships every week.</span></h2>
         </div>
-        <div>
+        <div class="studio-copy">
           <p class="lede">
             Voyage Interactive works across simulators, idle games and survival experiences.
             Most of our titles start from a mechanic we can prototype in days, then live or
             die on how quickly we read the retention data and respond to it.
           </p>
-          <p class="lede">
+          <p>
             That same loop is what we bring to the games we acquire. A game that stops
             receiving updates loses players fast on Roblox, so the first thing we do after a
             handover is get back on a regular update schedule.
           </p>
-          <a class="link-arrow" href="mailto:voyagenoirtype@gmail.com?subject=Working%20with%20Voyage">
+          <a class="btn" href="mailto:voyagenoirtype@gmail.com?subject=Working%20with%20Voyage">
             Work with us
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h9.5M8.5 4 12.5 8l-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <svg class="icon" aria-hidden="true"><use href="#i-arrow-up-right"/></svg>
           </a>
         </div>
       </div>
 
       <div class="features">
-        <article class="feature reveal" style="--tint:var(--blue-soft)">
-          <div class="feature-art"><img src="img/art/retention.svg" alt="" width="163" height="208" loading="lazy" /></div>
+        <article class="feature">
+          <span class="pict"><svg class="icon" aria-hidden="true"><use href="#p-retention"/></svg></span>
           <h3>Retention before scale</h3>
           <p>We read day one and day seven retention before spending anything on traffic. Games that do not hold players do not get promoted.</p>
         </article>
 
-        <article class="feature reveal" style="--tint:var(--coral-soft);--delay:.08s">
-          <div class="feature-art"><img src="img/art/drops.svg" alt="" width="275" height="288" loading="lazy" /></div>
+        <article class="feature">
+          <span class="pict"><svg class="icon" aria-hidden="true"><use href="#p-cadence"/></svg></span>
           <h3>Weekly content cadence</h3>
           <p>New units, events and limited drops on a fixed schedule. Players learn when to come back, and the update itself becomes the marketing.</p>
         </article>
 
-        <article class="feature reveal" style="--tint:var(--teal-soft);--delay:.16s">
-          <div class="feature-art"><img src="img/art/gem.svg" alt="" width="241" height="256" loading="lazy" /></div>
+        <article class="feature">
+          <span class="pict"><svg class="icon" aria-hidden="true"><use href="#p-tag"/></svg></span>
           <h3>Monetization that fits the loop</h3>
           <p>Passes and products built around what players already want to do faster, rather than paywalls dropped in front of core progression.</p>
         </article>
 
-        <article class="feature reveal" style="--tint:var(--sun-soft);--delay:.24s">
-          <div class="feature-art"><img src="img/art/community.svg" alt="" width="310" height="302" loading="lazy" /></div>
+        <article class="feature">
+          <span class="pict"><svg class="icon" aria-hidden="true"><use href="#p-community"/></svg></span>
           <h3>Community and moderation</h3>
           <p>Discord servers, feedback channels and in game reporting, staffed so that problems surface before they show up in the rating.</p>
         </article>
@@ -266,72 +226,79 @@
   </section>
 
   <!-- ============ ACQUISITIONS ============ -->
-  <section id="acquisitions">
+  <section class="section" id="acquisitions">
     <div class="container">
-      <div class="panel on-night">
-        <div class="section-head reveal">
-          <div>
-            <p class="kicker">Acquisitions</p>
-            <h2>Selling your Roblox game</h2>
+      <header class="section-head">
+        <p class="kicker">Acquisitions</p>
+        <h2>Selling your <span class="accent">Roblox game.</span></h2>
+        <p class="lede">
+          If you have built something that works but you do not want to keep running it,
+          we will take it over. Here is the sequence from first message to handover.
+        </p>
+      </header>
+
+      <ol class="steps">
+        <li class="step">
+          <div class="step-top">
+            <span class="step-num" aria-hidden="true">01</span>
+            <span class="pict"><svg class="icon" aria-hidden="true"><use href="#p-send"/></svg></span>
           </div>
-          <p class="lede">
-            If you have built something that works but you do not want to keep running it,
-            we will take it over. Here is the sequence from first message to handover.
-          </p>
-        </div>
-
-        <ol class="steps">
-          <li class="step reveal">
-            <div class="step-art"><img src="img/art/send.svg" alt="" width="163" height="238" loading="lazy" /></div>
-            <span class="step-num" aria-hidden="true">1</span>
-            <h3>You send the details</h3>
-            <p>Share the game link plus whatever analytics you have: visits, concurrent players, retention and revenue history.</p>
-          </li>
-          <li class="step reveal" style="--delay:.08s">
-            <div class="step-art"><img src="img/art/review.svg" alt="" width="137" height="283" loading="lazy" /></div>
-            <span class="step-num" aria-hidden="true">2</span>
-            <h3>We review and make an offer</h3>
-            <p>We look at the numbers, play the game and check how much of the codebase is yours, then come back with a written offer.</p>
-          </li>
-          <li class="step reveal" style="--delay:.16s">
-            <div class="step-art"><img src="img/art/offer.svg" alt="" width="197" height="288" loading="lazy" /></div>
-            <span class="step-num" aria-hidden="true">3</span>
-            <h3>Upfront, or revenue share</h3>
-            <p>Take the full amount at closing and walk away, or take less upfront and keep a share of what the game earns afterwards.</p>
-          </li>
-          <li class="step reveal" style="--delay:.24s">
-            <div class="step-art"><img src="img/art/ship.svg" alt="" width="379" height="369" loading="lazy" /></div>
-            <span class="step-num" aria-hidden="true">4</span>
-            <h3>Handover and first update</h3>
-            <p>We move the experience, source and assets across, then ship the first update under our team. You are done.</p>
-          </li>
-        </ol>
-
-        <div class="criteria-wrap">
-          <h3>What we look for</h3>
-          <div class="criteria">
-            <div class="criterion">
-              <h4>Live and playable</h4>
-              <p>Published on Roblox with real players in it, not a prototype or an unreleased build.</p>
-            </div>
-            <div class="criterion">
-              <h4>Yours to sell</h4>
-              <p>You own the place and the code, or you can name every contributor and the terms they worked under.</p>
-            </div>
-            <div class="criterion">
-              <h4>Any genre, any size</h4>
-              <p>Simulators, tycoons, obbies, survival. Small games with a strong loop are worth a conversation.</p>
-            </div>
+          <h3>You send the details</h3>
+          <p>Share the game link plus whatever analytics you have: visits, concurrent players, retention and revenue history.</p>
+        </li>
+        <li class="step">
+          <div class="step-top">
+            <span class="step-num" aria-hidden="true">02</span>
+            <span class="pict"><svg class="icon" aria-hidden="true"><use href="#p-review"/></svg></span>
           </div>
-        </div>
+          <h3>We review and make an offer</h3>
+          <p>We look at the numbers, play the game and check how much of the codebase is yours, then come back with a written offer.</p>
+        </li>
+        <li class="step">
+          <div class="step-top">
+            <span class="step-num" aria-hidden="true">03</span>
+            <span class="pict"><svg class="icon" aria-hidden="true"><use href="#p-offer"/></svg></span>
+          </div>
+          <h3>Upfront, or revenue share</h3>
+          <p>Take the full amount at closing and walk away, or take less upfront and keep a share of what the game earns afterwards.</p>
+        </li>
+        <li class="step">
+          <div class="step-top">
+            <span class="step-num" aria-hidden="true">04</span>
+            <span class="pict"><svg class="icon" aria-hidden="true"><use href="#p-handover"/></svg></span>
+          </div>
+          <h3>Handover and first update</h3>
+          <p>We move the experience, source and assets across, then ship the first update under our team. You are done.</p>
+        </li>
+      </ol>
 
-        <div class="panel-foot">
-          <a href="#contact" class="btn btn--sun">
-            Get an offer
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h9.5M8.5 4 12.5 8l-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </a>
-          <p>Every submission gets a written answer.</p>
-        </div>
+      <div class="criteria">
+        <h3>What we look for</h3>
+        <ul>
+          <li>
+            <span class="tick"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></span>
+            <h4>Live and playable</h4>
+            <p>Published on Roblox with real players in it, not a prototype or an unreleased build.</p>
+          </li>
+          <li>
+            <span class="tick"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></span>
+            <h4>Yours to sell</h4>
+            <p>You own the place and the code, or you can name every contributor and the terms they worked under.</p>
+          </li>
+          <li>
+            <span class="tick"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></span>
+            <h4>Any genre, any size</h4>
+            <p>Simulators, tycoons, obbies, survival. Small games with a strong loop are worth a conversation.</p>
+          </li>
+        </ul>
+      </div>
+
+      <div class="cta-row">
+        <a href="#contact" class="btn btn--primary">
+          Get an offer
+          <svg class="icon" aria-hidden="true"><use href="#i-arrow-up-right"/></svg>
+        </a>
+        <p>Every submission gets a written answer.</p>
       </div>
     </div>
   </section>
@@ -339,18 +306,21 @@
   <!-- ============ FAQ ============ -->
   <section class="section" id="faq">
     <div class="container faq-layout">
-      <div class="faq-intro reveal">
+      <div class="faq-intro">
         <p class="kicker">Questions</p>
-        <h2>Before you get in touch</h2>
+        <h2>Before you <span class="accent">get in touch.</span></h2>
         <p class="lede">
-          What creators ask us most. Anything else, write to
-          <a href="mailto:voyagenoirtype@gmail.com">voyagenoirtype@gmail.com</a>.
+          What creators ask us most. For anything else, write to
+          <a class="text-link" href="mailto:voyagenoirtype@gmail.com">voyagenoirtype@gmail.com</a>.
         </p>
       </div>
 
       <div class="faq">
         <details>
-          <summary>What do you need from me to make an offer?<span class="toggle" aria-hidden="true"></span></summary>
+          <summary>
+            What do you need from me to make an offer?
+            <span class="faq-toggle" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24"><path class="v" d="M12 5v14"/><path d="M5 12h14"/></svg></span>
+          </summary>
           <div class="faq-answer">
             <p>
               The game link and access to your analytics. Visit history, concurrent player
@@ -362,7 +332,10 @@
         </details>
 
         <details>
-          <summary>How is the offer calculated?<span class="toggle" aria-hidden="true"></span></summary>
+          <summary>
+            How is the offer calculated?
+            <span class="faq-toggle" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24"><path class="v" d="M12 5v14"/><path d="M5 12h14"/></svg></span>
+          </summary>
           <div class="faq-answer">
             <p>
               Mainly from recent revenue and how stable it is, adjusted for how much work
@@ -374,7 +347,10 @@
         </details>
 
         <details>
-          <summary>Can I keep a share instead of selling outright?<span class="toggle" aria-hidden="true"></span></summary>
+          <summary>
+            Can I keep a share instead of selling outright?
+            <span class="faq-toggle" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24"><path class="v" d="M12 5v14"/><path d="M5 12h14"/></svg></span>
+          </summary>
           <div class="faq-answer">
             <p>
               Yes. You can take a lower payment at closing and keep an agreed percentage of
@@ -385,7 +361,10 @@
         </details>
 
         <details>
-          <summary>What happens to the game after the handover?<span class="toggle" aria-hidden="true"></span></summary>
+          <summary>
+            What happens to the game after the handover?
+            <span class="faq-toggle" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24"><path class="v" d="M12 5v14"/><path d="M5 12h14"/></svg></span>
+          </summary>
           <div class="faq-answer">
             <p>
               It goes on our update schedule. We keep the core loop that made it work and
@@ -396,7 +375,10 @@
         </details>
 
         <details>
-          <summary>I am not selling, I want to work with you<span class="toggle" aria-hidden="true"></span></summary>
+          <summary>
+            I am not selling, I want to work with you
+            <span class="faq-toggle" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24"><path class="v" d="M12 5v14"/><path d="M5 12h14"/></svg></span>
+          </summary>
           <div class="faq-answer">
             <p>
               Use the same form or email us directly. Tell us what you do, scripting,
@@ -410,32 +392,18 @@
   </section>
 
   <!-- ============ CONTACT ============ -->
-  <section class="section section--flush" id="contact">
+  <section class="section" id="contact">
     <div class="container">
-      <div class="panel on-blue contact">
-        <div class="contact-copy">
-          <p class="kicker">Contact</p>
-          <h2>Tell us about your game</h2>
-          <p class="lede">
-            Every message gets a reply. If you are selling, include the analytics you have
-            so we can skip a round of questions.
-          </p>
+      <header class="section-head">
+        <p class="kicker">Contact</p>
+        <h2>Tell us about <span class="accent">your game.</span></h2>
+        <p class="lede">
+          Every message gets a reply. If you are selling, include the analytics you have
+          so we can skip a round of questions.
+        </p>
+      </header>
 
-          <div class="contact-foot">
-            <dl class="contact-direct">
-              <div>
-                <dt>Email</dt>
-                <dd><a href="mailto:voyagenoirtype@gmail.com">voyagenoirtype@gmail.com</a></dd>
-              </div>
-              <div>
-                <dt>Best for</dt>
-                <dd>Acquisitions, partnerships, hiring</dd>
-              </div>
-            </dl>
-            <img class="contact-art" src="img/art/mailbox.svg" alt="" width="200" height="260" loading="lazy" />
-          </div>
-        </div>
-
+      <div class="form-card">
         <form class="form" id="contactForm" novalidate>
           <div class="form-row">
             <div class="field">
@@ -463,16 +431,31 @@
             <input type="text" id="company" name="company" tabindex="-1" autocomplete="off" />
           </div>
 
-          <label class="consent" for="age">
-            <input type="checkbox" id="age" name="age_confirm" required />
-            <span>I am 13 or older and agree to be contacted about this enquiry.</span>
-          </label>
+          <p class="form-status" id="formStatus" role="status" aria-live="polite" hidden>
+            <svg class="icon icon-check" aria-hidden="true"><use href="#i-check"/></svg>
+            <svg class="icon icon-alert" aria-hidden="true"><use href="#i-alert"/></svg>
+            <span></span>
+          </p>
 
-          <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
+          <div class="form-foot">
+            <label class="consent" for="age">
+              <input type="checkbox" id="age" name="age_confirm" required />
+              <span>I am 13 or older and agree to be contacted about this enquiry.</span>
+            </label>
 
-          <button type="submit" class="btn btn--primary btn--block" id="submitBtn">Send message</button>
+            <button type="submit" class="btn btn--primary" id="submitBtn">
+              <span>Send message</span>
+              <svg class="icon icon--along" aria-hidden="true"><use href="#i-arrow-right"/></svg>
+            </button>
+          </div>
         </form>
       </div>
+
+      <p class="contact-direct">
+        Prefer email? Write to
+        <a class="text-link" href="mailto:voyagenoirtype@gmail.com">voyagenoirtype@gmail.com</a>
+        for acquisitions, partnerships or hiring.
+      </p>
     </div>
   </section>
 
@@ -482,44 +465,36 @@
   <div class="container footer-top">
     <div class="footer-brand">
       <a href="index.html" class="brand" aria-label="Voyage Interactive, home">
-        <svg viewBox="0 0 32 32" aria-hidden="true">
-          <path d="M16 8l10.4 6L16 20 5.6 14z" fill="#6f8bff"/>
-          <path d="M5.6 14L16 20v12L5.6 26z" fill="#3b5bf5"/>
-          <path d="M26.4 14L16 20v12l10.4-6z" fill="#2a43cf"/>
-          <path d="M16 14V2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-          <path d="M17 1.6l8.6 3.1L17 7.8z" fill="#ffc93c"/>
-        </svg>
-        Voyage Interactive
+        <svg class="icon brand-mark" aria-hidden="true"><use href="#logo"/></svg>
+        <span class="brand-name">Voyage <span>Interactive</span></span>
       </a>
       <p>A Roblox studio building original experiences and acquiring games from independent creators.</p>
     </div>
 
     <div class="footer-col">
-      <h4>Studio</h4>
+      <h4 class="label">Studio</h4>
       <a href="games.html">Games</a>
       <a href="index.html#studio">About</a>
       <a href="mailto:voyagenoirtype@gmail.com?subject=Working%20with%20Voyage">Careers</a>
     </div>
 
     <div class="footer-col">
-      <h4>Sellers</h4>
+      <h4 class="label">Sellers</h4>
       <a href="index.html#acquisitions">How it works</a>
       <a href="index.html#faq">FAQ</a>
       <a href="index.html#contact">Get an offer</a>
     </div>
 
     <div class="footer-col">
-      <h4>More</h4>
+      <h4 class="label">More</h4>
       <a href="privacy.html">Privacy</a>
       <a href="mailto:voyagenoirtype@gmail.com">Email us</a>
     </div>
   </div>
 
-  <div class="footer-bottom">
-    <div class="container">
-      <p>&copy; <span id="year">2026</span> Voyage Interactive</p>
-      <p>Not affiliated with or endorsed by Roblox Corporation</p>
-    </div>
+  <div class="container footer-bottom">
+    <p>&copy; <span id="year">2026</span> Voyage Interactive</p>
+    <p>Not affiliated with or endorsed by Roblox Corporation</p>
   </div>
 </footer>
 

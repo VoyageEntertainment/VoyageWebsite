@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex">
+<title>Social preview source | Voyage Interactive</title>
+<!--
+  Source for the two bitmap images the site needs. Not linked from anywhere.
+
+    preview.png            1200 x 630   link preview on Discord, X, etc.
+    apple-touch-icon.png    180 x 180   home screen icon, add ?touch=1
+
+  To regenerate, serve the site locally and screenshot this page at exactly
+  that size, for example with Chrome:
+
+    chrome --headless=new --window-size=1200,630 --screenshot=preview.png
+           http://localhost:4173/tools/social-preview.html
+
+  The art uses the same twelve places as the hero on the home page; change
+  the files below when the line-up changes.
+
+  The screenshot comes out at about 570 KB. The copy in the site was then
+  reduced to a dithered 256-colour palette (about 260 KB), which looks the
+  same at this size and keeps link previews quick to load.
+-->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300..900&display=swap">
+<link rel="stylesheet" href="../css/style.css">
+<style>
+  html, body { width: 1200px; height: 630px; overflow: hidden; background: var(--bg); }
+  .hero { height: 630px; min-height: 0; padding: 0; justify-content: center; }
+  .hero-inner { width: auto; }
+  .wall-tile { animation: none; }
+  .og-brand { display: flex; justify-content: center; margin-bottom: 30px; }
+  .brand-mark { width: 40px; height: 40px; }
+  .brand-name { font-size: 22px; }
+  .hero h1 { font-size: 82px; }
+  .og-line { margin-top: 26px; font-size: 27px; font-weight: 300; color: var(--text-2); }
+
+  /* ?touch=1: just the mark on the blue tile, square (phones round the corners themselves) */
+  .touch, .touch body { width: 180px; height: 180px; }
+  .touch body::before, .touch .hero { display: none; }
+  .touch-mark { display: none; }
+  .touch .touch-mark { display: block; width: 180px; height: 180px; }
+</style>
+<script>
+  if (new URLSearchParams(location.search).get('touch')) document.documentElement.classList.add('touch');
+</script>
+</head>
+<body>
+<svg class="sprite" width="0" height="0" aria-hidden="true">
+  <symbol id="logo" viewBox="0 0 32 32"><path class="ink" d="M17 3v17h11z"/><path class="blk" d="M14 9v11H6z"/><path class="ink" d="M3 23h26l-3.2 5.1a2 2 0 0 1-1.7.9H7.9a2 2 0 0 1-1.7-.9z"/></symbol>
+</svg>
+
+<div class="hero">
+  <div class="hero-wall">
+    <div class="wall-tile"><img src="../img/games/kick-a-brainrot-cover.webp" alt=""></div>
+    <div class="wall-tile"><img src="../img/games/steal-a-mob-cover.webp" alt=""></div>
+    <div class="wall-tile"><img src="../img/games/brainrot-balloon-cover.webp" alt=""></div>
+    <div class="wall-tile"><img src="../img/games/grow-trees-cover.webp" alt=""></div>
+    <div class="wall-tile"><img src="../img/games/dont-move-for-brainrots-cover.webp" alt=""></div>
+    <div class="wall-tile"><img src="../img/games/explode-a-brainrot-cover.webp" alt=""></div>
+    <div class="wall-tile"><img src="../img/games/brainrot-disaster-survival-cover.webp" alt=""></div>
+    <div class="wall-tile wall-tile--sq"><img src="../img/games/kick-a-brainrot.webp" alt=""></div>
+    <div class="wall-tile wall-tile--sq"><img src="../img/games/steal-a-mob.webp" alt=""></div>
+    <div class="wall-tile wall-tile--sq"><img src="../img/games/brainrot-balloon.webp" alt=""></div>
+    <div class="wall-tile wall-tile--sq"><img src="../img/games/grow-trees.webp" alt=""></div>
+    <div class="wall-tile wall-tile--sq"><img src="../img/games/dont-move-for-brainrots.webp" alt=""></div>
+  </div>
+
+  <div class="hero-inner">
+    <div class="og-brand"><span class="brand"><svg class="icon brand-mark"><use href="#logo"/></svg><span class="brand-name">Voyage <span>Interactive</span></span></span></div>
+    <h1><span>We build</span> <span>Roblox games.</span> <span class="accent">And we buy them.</span></h1>
+    <p class="og-line">Original Roblox games, and a new home for yours.</p>
+  </div>
+</div>
+
+<!-- the favicon without its rounded corners, with more room around the mark -->
+<svg class="touch-mark" viewBox="0 0 32 32">
+  <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1552e8"/><stop offset="1" stop-color="#2a7bff"/></linearGradient></defs>
+  <rect width="32" height="32" fill="url(#g)"/>
+  <g transform="translate(16 16) scale(0.6) translate(-16 -16.5)" fill="#fff">
+    <path d="M17 3v17h11z"/>
+    <path d="M14 9v11H6z" fill-opacity="0.72"/>
+    <path d="M3 23h26l-3.2 5.1a2 2 0 0 1-1.7.9H7.9a2 2 0 0 1-1.7-.9z"/>
+  </g>
+</svg>
+</body>
+</html>
