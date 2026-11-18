@@ -281,12 +281,125 @@ function forDisplay(games) {
 const hasPlayers = games => games.some(g => playingOf(g) > 0);
 
 /* =============================================================
+   Numbers that count up
+   ============================================================= */
+
+/* Figures are written as text: "58.9M", "182.6K", "98%", "7". To count
+   up to one, the number inside is animated and whatever surrounds it is
+   kept, with the same number of decimals all the way: 0.0M ... 58.9M.
+
+   The element's own text is always the real figure. While it counts, the
+   running number is kept in data-shown and the stylesheet draws that on
+   top of the real text (css/style.css, [data-shown]). So a screen reader,
+   a search engine or a copy and paste gets the real figure at any moment,
+   and the figure keeps its final width, so nothing beside it moves.
+
+   Every figure has a key ("total:visits", "117782023218098:rating").
+   What is on screen for a key is remembered, so when the live numbers
+   arrive and a list is drawn again, a figure carries on from where it
+   had got to instead of starting over from zero: a count that is still
+   running simply ends on the new number, in the same time. A figure only
+   starts counting once it has scrolled into view. */
+const COUNT_MS  = 1800;
+const NO_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const tallies   = new Map();   // key -> { text, value, unit, done, from, started }: what is on screen for that figure
+const counting  = new Map();   // element -> { key, text, parts, from, started }
+let countFrame  = 0;
+
+function parseFigure(text) {
+  const m = /^(\D*)(\d+(?:\.\d+)?)(.*)$/.exec(text);
+  if (!m) return null;
+  return { before: m[1], to: parseFloat(m[2]), decimals: (m[2].split('.')[1] || '').length, unit: m[3] };
+}
+
+const figureText = (parts, value) => parts.before + value.toFixed(parts.decimals) + parts.unit;
+
+function countStep(now) {
+  let running = false;
+  counting.forEach((job, el) => {
+    if (!el.isConnected) { stopCounting(el); return; }   // drawn again since; its replacement carries on
+    if (!job.started) return;                            // still below the fold
+    const t = Math.min(1, Math.max(0, (now - job.started) / COUNT_MS));
+    if (t < 1) {
+      // fast at first, then easing into the final figure
+      const value = job.from + (job.parts.to - job.from) * (1 - Math.pow(1 - t, 4));
+      el.dataset.shown = figureText(job.parts, value);
+      tallies.set(job.key, { text: job.text, value, unit: job.parts.unit, done: false, from: job.from, started: job.started });
+      running = true;
+    } else {
+      el.removeAttribute('data-shown');
+      tallies.set(job.key, { text: job.text, value: job.parts.to, unit: job.parts.unit, done: true });
+      stopCounting(el);
+    }
+  });
+  countFrame = running ? requestAnimationFrame(countStep) : 0;
+}
+
+// starts a figure the first time it is on screen
+const countWatcher = 'IntersectionObserver' in window
+  ? new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        const job = counting.get(entry.target);
+        if (!job || !entry.isIntersecting) return;
+        countWatcher.unobserve(entry.target);
+        job.started = performance.now();
+        if (!countFrame) countFrame = requestAnimationFrame(countStep);
+      });
+    }, { rootMargin: '0px 0px -6% 0px' })
+  : null;
+
+function stopCounting(el) {
+  counting.delete(el);
+  if (countWatcher) countWatcher.unobserve(el);
+}
+
+/* Put a figure into an element, counting up to it. */
+function countTo(el, text, key) {
+  const parts = parseFigure(text);
+  const seen  = tallies.get(key);
+  stopCounting(el);
+  el.textContent = text;
+  el.classList.add('is-counted');   // the stylesheet keeps headline figures hidden until this
+
+  // nothing to animate: no number in it, motion switched off, or this very figure is already up
+  if (!parts || NO_MOTION || !countWatcher || (seen && seen.done && seen.text === text)) {
+    el.removeAttribute('data-shown');
+    if (parts) tallies.set(key, { text, value: parts.to, unit: parts.unit, done: true });
+    return;
+  }
+
+  // Carry on from what is on screen for this key, as long as the unit is
+  // the same. A count that is still running keeps its start and its clock
+  // and only changes where it ends; a finished one counts on from its value.
+  const known   = seen && seen.unit === parts.unit;
+  const running = known && !seen.done && seen.started > 0;
+  const value   = known ? seen.value : 0;
+  const from    = running ? seen.from : value;
+  const started = running ? seen.started : 0;
+
+  el.dataset.shown = figureText(parts, value);
+  tallies.set(key, { text, value, unit: parts.unit, done: false, from, started });
+  counting.set(el, { key, text, parts, from, started });
+  if (!started) countWatcher.observe(el);
+  else if (!countFrame) countFrame = requestAnimationFrame(countStep);
+}
+
+/* Start every figure in a freshly drawn list. The markup carries the final
+   text, marked with data-count="key"; elements from the previous drawing
+   are forgotten first. */
+function countFigures(host) {
+  counting.forEach((job, el) => { if (!el.isConnected) stopCounting(el); });
+  host.querySelectorAll('[data-count]').forEach(el => countTo(el, el.textContent, el.dataset.count));
+}
+
+/* =============================================================
    Renderers
    ============================================================= */
 
 /* Headline figures. The recorded totals are already in the HTML; this
-   swaps in fresh ones. "Playing now" has no offline value, so its entry
-   stays hidden unless there is a number to show. */
+   counts up to them, and again to the fresh ones when they arrive.
+   "Playing now" has no offline value, so its entry stays hidden unless
+   there is a number to show. */
 function renderFigures(games) {
   const playing = games.reduce((s, g) => s + playingOf(g), 0);
   const values = {
@@ -304,8 +417,8 @@ function renderFigures(games) {
       if (tile) tile.hidden = true;
       return;
     }
-    el.textContent = value;
     if (tile) tile.hidden = false;
+    countTo(el, value, 'total:' + el.dataset.figure);
   });
 }
 
@@ -333,9 +446,14 @@ function renderWall(ranked) {
   host.innerHTML = html;
 }
 
-/* ---------- a game's figures ---------- */
-function gstat(value, label, kind) {
-  return `<span class="gstat${kind ? ' gstat--' + kind : ''}"><b>${value}</b><span class="label">${label}</span></span>`;
+/* ---------- a game's figures ----------
+   Each number is marked with data-count, its key for counting up (see
+   "Numbers that count up"): the game's place id and which figure it is. */
+function gstat(game, what, value, label, kind) {
+  const number = `<span data-count="${esc(game.placeId)}:${what}">${esc(value)}</span>`;
+  return `<span class="gstat${kind ? ' gstat--' + kind : ''}">` +
+    `<b>${kind === 'live' ? '<span class="live-dot"></span>' : ''}${number}</b>` +
+    `<span class="label">${label}</span></span>`;
 }
 
 // Visits lead, in the accent; the player count only appears when there
@@ -344,10 +462,10 @@ function gstats(game) {
   const stats   = getStats(game);
   const playing = playingOf(game);
   return `<span class="gstats">` +
-    gstat(esc(stats.plays), 'Visits', 'lead') +
-    gstat(esc(stats.favorites), 'Favorites') +
-    gstat(esc(stats.rating), 'Rating') +
-    (playing > 0 ? gstat(`<span class="live-dot"></span>${esc(fmtNum(playing))}`, 'Playing now', 'live') : '') +
+    gstat(game, 'visits', stats.plays, 'Visits', 'lead') +
+    gstat(game, 'favorites', stats.favorites, 'Favorites') +
+    gstat(game, 'rating', stats.rating, 'Rating') +
+    (playing > 0 ? gstat(game, 'playing', fmtNum(playing), 'Playing now', 'live') : '') +
     `</span>`;
 }
 
@@ -409,8 +527,8 @@ function renderHome(ranked, rank) {
   const lead = document.getElementById('flagship');
   const grid = document.getElementById('gamesGrid');
   if (!lead || !grid || !ranked.length) return;
-  setHTML(lead, flagshipCard(ranked[0]));
-  setHTML(grid, ranked.slice(1, 1 + HOME_LIMIT).map(g => gameCard(g, rank[g.placeId], false)).join(''));
+  if (setHTML(lead, flagshipCard(ranked[0]))) countFigures(lead);
+  if (setHTML(grid, ranked.slice(1, 1 + HOME_LIMIT).map(g => gameCard(g, rank[g.placeId], false)).join(''))) countFigures(grid);
 }
 
 /* Games page: say where the numbers came from. */
@@ -453,7 +571,7 @@ function applyView() {
   if (view.genre !== 'All') list = list.filter(g => g.genre === view.genre);
   list.sort(SORTS[view.sort] || SORTS.visits);
 
-  setHTML(host, list.map(g => gameCard(g, view.rank[g.placeId], true)).join(''));
+  if (setHTML(host, list.map(g => gameCard(g, view.rank[g.placeId], true)).join(''))) countFigures(host);
   balanceGrid(host);
 
   const count = document.getElementById('resultCount');

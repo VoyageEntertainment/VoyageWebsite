@@ -456,6 +456,12 @@ p { text-wrap: pretty; }
   opacity: var(--o, 1);
   filter: brightness(var(--b, 0.62)) blur(var(--blur, 0px));
   transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) rotateZ(var(--rz, 0deg));
+  /* the pointer: --mx and --my run from -1 to 1 (js/script.js) and the tile
+     moves against them, up to --depth pixels sideways and two thirds of
+     that up and down. Kept apart from transform, which the drift animates. */
+  translate:
+    calc(var(--mx, 0) * var(--depth, 12) * -1px)
+    calc(var(--my, 0) * var(--depth, 12) * -0.66px);
   animation: drift var(--t, 16s) ease-in-out infinite alternate;
 }
 .wall-tile--sq { aspect-ratio: 1; }
@@ -464,19 +470,21 @@ p { text-wrap: pretty; }
   to { transform: translate3d(0, var(--dy, -14px), 0) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) rotateZ(var(--rz, 0deg)); }
 }
 
-/* twelve places; the script deals the art into them */
-.wall-tile:nth-child(1)  { --x: 1.5%;  --y: 7%;   --w: 17%;   --ry: 20deg;  --rz: -6deg; --t: 17s; }
-.wall-tile:nth-child(2)  { --x: -2%;   --y: 36%;  --w: 15.5%; --ry: 24deg;  --rz: 5deg;  --t: 21s; --dy: 12px; }
-.wall-tile:nth-child(3)  { --x: 3.5%;  --y: 66%;  --w: 18%;   --ry: 18deg;  --rz: -4deg; --t: 19s; }
-.wall-tile:nth-child(4)  { --x: 81.5%; --y: 6%;   --w: 17.5%; --ry: -20deg; --rz: 7deg;  --t: 20s; --dy: 12px; }
-.wall-tile:nth-child(5)  { --x: 86%;   --y: 35%;  --w: 15.5%; --ry: -24deg; --rz: -5deg; --t: 18s; }
-.wall-tile:nth-child(6)  { --x: 79%;   --y: 65%;  --w: 18%;   --ry: -18deg; --rz: 5deg;  --t: 22s; --dy: 12px; }
-.wall-tile:nth-child(7)  { --x: 20.5%; --y: 1%;   --w: 12%;   --rx: 10deg;  --rz: 4deg;  --b: 0.4; --blur: 2px; --t: 24s; }
-.wall-tile:nth-child(8)  { --x: 66%;   --y: 0%;   --w: 12.5%; --rx: 10deg;  --rz: -5deg; --b: 0.4; --blur: 2px; --t: 23s; }
-.wall-tile:nth-child(9)  { --x: 16%;   --y: 44%;  --w: 10.5%; --ry: 14deg;  --rz: -7deg; --b: 0.34; --blur: 3px; --t: 26s; }
-.wall-tile:nth-child(10) { --x: 73.5%; --y: 46%;  --w: 10.5%; --ry: -14deg; --rz: 7deg;  --b: 0.34; --blur: 3px; --t: 25s; }
-.wall-tile:nth-child(11) { --x: 24%;   --y: 76%;  --w: 11.5%; --rx: -8deg;  --rz: 6deg;  --b: 0.36; --blur: 2px; --t: 22s; }
-.wall-tile:nth-child(12) { --x: 63%;   --y: 78%;  --w: 11.5%; --rx: -8deg;  --rz: -6deg; --b: 0.36; --blur: 2px; --t: 27s; }
+/* twelve places; the script deals the art into them. --depth is how far a
+   tile travels with the pointer: the six sharp ones are near, the six
+   blurred ones far away. */
+.wall-tile:nth-child(1)  { --x: 1.5%;  --y: 7%;   --w: 17%;   --ry: 20deg;  --rz: -6deg; --t: 17s; --depth: 30; }
+.wall-tile:nth-child(2)  { --x: -2%;   --y: 36%;  --w: 15.5%; --ry: 24deg;  --rz: 5deg;  --t: 21s; --dy: 12px; --depth: 24; }
+.wall-tile:nth-child(3)  { --x: 3.5%;  --y: 66%;  --w: 18%;   --ry: 18deg;  --rz: -4deg; --t: 19s; --depth: 34; }
+.wall-tile:nth-child(4)  { --x: 81.5%; --y: 6%;   --w: 17.5%; --ry: -20deg; --rz: 7deg;  --t: 20s; --dy: 12px; --depth: 32; }
+.wall-tile:nth-child(5)  { --x: 86%;   --y: 35%;  --w: 15.5%; --ry: -24deg; --rz: -5deg; --t: 18s; --depth: 24; }
+.wall-tile:nth-child(6)  { --x: 79%;   --y: 65%;  --w: 18%;   --ry: -18deg; --rz: 5deg;  --t: 22s; --dy: 12px; --depth: 34; }
+.wall-tile:nth-child(7)  { --x: 20.5%; --y: 1%;   --w: 12%;   --rx: 10deg;  --rz: 4deg;  --b: 0.4; --blur: 2px; --t: 24s; --depth: 11; }
+.wall-tile:nth-child(8)  { --x: 66%;   --y: 0%;   --w: 12.5%; --rx: 10deg;  --rz: -5deg; --b: 0.4; --blur: 2px; --t: 23s; --depth: 11; }
+.wall-tile:nth-child(9)  { --x: 16%;   --y: 44%;  --w: 10.5%; --ry: 14deg;  --rz: -7deg; --b: 0.34; --blur: 3px; --t: 26s; --depth: 8; }
+.wall-tile:nth-child(10) { --x: 73.5%; --y: 46%;  --w: 10.5%; --ry: -14deg; --rz: 7deg;  --b: 0.34; --blur: 3px; --t: 25s; --depth: 8; }
+.wall-tile:nth-child(11) { --x: 24%;   --y: 76%;  --w: 11.5%; --rx: -8deg;  --rz: 6deg;  --b: 0.36; --blur: 2px; --t: 22s; --depth: 13; }
+.wall-tile:nth-child(12) { --x: 63%;   --y: 78%;  --w: 11.5%; --rx: -8deg;  --rz: -6deg; --b: 0.36; --blur: 2px; --t: 27s; --depth: 13; }
 
 /* the dark pool in the middle, a blue light behind the title, and a
    fade into the page at the bottom */
@@ -510,7 +518,10 @@ p { text-wrap: pretty; }
   border-left: 1px solid var(--line);
 }
 .stat:first-child { border-left: 0; }
+/* as wide as its text and no wider, so a number counting up (below) can
+   start from the figure's own left edge */
 .stat dd {
+  align-self: center;
   font-size: clamp(2rem, 4.6vw, 3.6rem);
   font-weight: 800;
   line-height: 1;
@@ -518,6 +529,31 @@ p { text-wrap: pretty; }
   color: #fff;
 }
 .stat--live dd { color: var(--green); }
+
+/* The figures count up from zero (js/games-data.js). They stay out of
+   sight until the script takes them over, so the recorded value never
+   shows for a moment and then drops to zero. If the script never arrives
+   they appear by themselves after three seconds. */
+.stat dd { visibility: hidden; animation: appear 0s 3s forwards; }
+.stat dd.is-counted { visibility: visible; animation: none; }
+@keyframes appear { to { visibility: visible; } }
+
+/* A figure while it counts up. Its own text is the real figure and is
+   left in place, unpainted: it holds the final width, so nothing beside
+   it moves, and it is what a screen reader hears. The running number
+   comes from data-shown and is drawn over it, from the same left edge,
+   so it grows to the right and lands exactly on the real one. */
+[data-shown] { position: relative; -webkit-text-fill-color: transparent; }
+[data-shown]::after {
+  content: attr(data-shown);
+  content: attr(data-shown) / '';   /* where supported: generated text with no spoken form */
+  position: absolute;
+  left: 0; top: 0;
+  white-space: nowrap;
+  -webkit-text-fill-color: currentColor;
+}
+/* an inline box would place the running number by its font's ascent */
+[data-count] { display: inline-block; }
 
 /* ---------- Games ---------- */
 /* The most played game gets a card of its own, art on the left. */
