@@ -106,7 +106,10 @@
 
 @media (max-width: 640px) {
   .toolbar { flex-direction: column; align-items: stretch; }
-  .filter-btn { flex: 1 1 auto; padding-inline: 12px; }
+  /* The chips grow to fill the row, so this padding only decides when
+     they wrap: kept small enough that every genre fits on one row on a
+     360px phone, instead of the last one stretching alone below. */
+  .filter-btn { flex: 1 1 auto; padding-inline: 8px; }
   .sort { justify-content: space-between; }
   .sort-field { flex: 1; }
   .sort select { width: 100%; }

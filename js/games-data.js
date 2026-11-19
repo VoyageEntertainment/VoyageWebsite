@@ -31,7 +31,7 @@ const GAMES = [
     cover: 'img/games/kick-a-brainrot-cover.webp',
     color: '#ff5a4e', deep: '#d7312c',
     url: 'https://www.roblox.com/games/117782023218098/Kick-a-Brainrot',
-    fallback: { plays: '53.3M', rating: '98%', favorites: '2.1M' }
+    fallback: { plays: '53.4M', rating: '98%', favorites: '2.1M' }
   },
   {
     placeId:    '95275361430060',
@@ -43,7 +43,7 @@ const GAMES = [
     cover: 'img/games/steal-a-mob-cover.webp',
     color: '#5b6cf0', deep: '#5362e6',
     url: 'https://www.roblox.com/games/95275361430060/Steal-a-Mob',
-    fallback: { plays: '2.4M', rating: '96%', favorites: '182.5K' }
+    fallback: { plays: '2.4M', rating: '95%', favorites: '182.6K' }
   },
   {
     placeId:    '119749960243257',
@@ -55,7 +55,7 @@ const GAMES = [
     cover: 'img/games/brainrot-balloon-cover.webp',
     color: '#a98bff', deep: '#7d5ccc',
     url: 'https://www.roblox.com/games/119749960243257/Brainrot-Balloon',
-    fallback: { plays: '2.1M', rating: '94%', favorites: '220.9K' }
+    fallback: { plays: '2.1M', rating: '95%', favorites: '220.9K' }
   },
   {
     placeId:    '103134341448025',
@@ -67,7 +67,7 @@ const GAMES = [
     cover: 'img/games/grow-trees-cover.webp',
     color: '#5cc45e', deep: '#08851b',
     url: 'https://www.roblox.com/games/103134341448025/Grow-Trees-For-Brainrots',
-    fallback: { plays: '935.3K', rating: '94%', favorites: '101.7K' }
+    fallback: { plays: '948.7K', rating: '96%', favorites: '103.1K' }
   },
   {
     placeId:    '81776530583332',
@@ -79,7 +79,7 @@ const GAMES = [
     cover: 'img/games/dont-move-for-brainrots-cover.webp',
     color: '#e8b531', deep: '#926e02',
     url: 'https://www.roblox.com/games/81776530583332/Dont-Move-For-Brainrots',
-    fallback: { plays: '117.7K', rating: '64%', favorites: '17.6K' }
+    fallback: { plays: '117.7K', rating: '65%', favorites: '17.6K' }
   },
   {
     placeId:    '131666238350869',
@@ -91,7 +91,7 @@ const GAMES = [
     cover: 'img/games/explode-a-brainrot-cover.webp',
     color: '#ff9a3d', deep: '#ad600b',
     url: 'https://www.roblox.com/games/131666238350869/Explode-a-Brainrot',
-    fallback: { plays: '44.2K', rating: '92%', favorites: '7.3K' }
+    fallback: { plays: '44.3K', rating: '92%', favorites: '7.3K' }
   },
   {
     placeId:    '123506026934679',
@@ -103,7 +103,79 @@ const GAMES = [
     cover: 'img/games/brainrot-disaster-survival-cover.webp',
     color: '#46b3f5', deep: '#017ab3',
     url: 'https://www.roblox.com/games/123506026934679/Brainrot-Disaster-Survival',
-    fallback: { plays: '30.7K', rating: '67%', favorites: '5.4K' }
+    fallback: { plays: '30.8K', rating: '68%', favorites: '5.4K' }
+  },
+  {
+    placeId:    '103662429307630',
+    universeId: '10769311074',
+    title: 'Catch & Steal an Egg',
+    genre: 'Simulator',
+    description: 'Chase down eggs that run from you, hatch them into pets and train your speed for the rarer ones.',
+    image: 'img/games/catch-steal-an-egg.webp',
+    cover: 'img/games/catch-steal-an-egg-cover.webp',
+    color: '#b45cf0', deep: '#a53bed',
+    url: 'https://www.roblox.com/games/103662429307630/Catch-Steal-an-Egg',
+    fallback: { plays: '68.3K', rating: '81%', favorites: '1.6K' }
+  },
+  {
+    placeId:    '91202194985505',
+    universeId: '10771974110',
+    title: 'Push Animals For Eggs',
+    genre: 'Simulator',
+    description: 'Push farm animals until they drop eggs. The harder you push, the rarer the egg.',
+    image: 'img/games/push-animals-for-eggs.webp',
+    cover: 'img/games/push-animals-for-eggs-cover.webp',
+    color: '#2ec4b6', deep: '#1e8178',
+    url: 'https://www.roblox.com/games/91202194985505/Push-Animals-For-Eggs',
+    fallback: { plays: '39K', rating: '94%', favorites: '649' }
+  },
+  {
+    placeId:    '80047097677723',
+    universeId: '10767954599',
+    title: 'Kick a Pet',
+    genre: 'Simulator',
+    description: 'Hatch eggs, collect pets and kick them to trigger mutations. More than 250 pets to find.',
+    image: 'img/games/kick-a-pet.webp',
+    cover: 'img/games/kick-a-pet-cover.webp',
+    color: '#38c6f4', deep: '#097da2',
+    url: 'https://www.roblox.com/games/80047097677723/Kick-a-Pet',
+    fallback: { plays: '36.6K', rating: '86%', favorites: '446' }
+  },
+  {
+    placeId:    '87910146561305',
+    universeId: '10774809271',
+    title: 'Eat Jelly For Eggs',
+    genre: 'Simulator',
+    description: 'Eat through jelly to find hidden eggs, outrun the guardians and hatch rare animals in your base.',
+    image: 'img/games/eat-jelly-for-eggs.webp',
+    cover: 'img/games/eat-jelly-for-eggs-cover.webp',
+    color: '#8bd346', deep: '#4e801e',
+    url: 'https://www.roblox.com/games/87910146561305/Eat-Jelly-For-Eggs',
+    fallback: { plays: '30.5K', rating: '72%', favorites: '71' }
+  },
+  {
+    placeId:    '111063930640316',
+    universeId: '10774664913',
+    title: '+1 Pogo Escape',
+    genre: 'Obby',
+    description: 'Every bounce adds +1 power. Wall-jump through nine stages, from city rooftops to lava waves.',
+    image: 'img/games/pogo-escape.webp',
+    cover: 'img/games/pogo-escape-cover.webp',
+    color: '#f2506a', deep: '#e51133',
+    url: 'https://www.roblox.com/games/111063930640316/1-Pogo-Escape',
+    fallback: { plays: '30.3K', rating: '57%', favorites: '85' }
+  },
+  {
+    placeId:    '91109668570907',
+    universeId: '10772401929',
+    title: 'Empty A Vault',
+    genre: 'Simulator',
+    description: 'Smash through safes and steel doors, sell the loot and dig deeper for rarer treasure.',
+    image: 'img/games/empty-a-vault.webp',
+    cover: 'img/games/empty-a-vault-cover.webp',
+    color: '#f4c430', deep: '#906f08',
+    url: 'https://www.roblox.com/games/91109668570907/Empty-A-Vault',
+    fallback: { plays: '28.9K', rating: '59%', favorites: '228' }
   }
 ];
 
