@@ -104,12 +104,12 @@
         <li class="feature">
           <span class="pict"><svg class="icon" aria-hidden="true"><use href="#p-browser"/></svg></span>
           <h2 class="h3">Kept in your browser</h2>
-          <p>A short-lived copy of the public game statistics, and nothing else.</p>
+          <p>Short-lived copies of public game data from Roblox, and nothing else.</p>
         </li>
         <li class="feature">
           <span class="pict"><svg class="icon" aria-hidden="true"><use href="#p-network"/></svg></span>
           <h2 class="h3">Services contacted</h2>
-          <p>Google Fonts, Roblox by way of four proxies, and Formspree.</p>
+          <p>Google Fonts, Roblox directly and by way of three proxies, and Formspree.</p>
         </li>
       </ul>
     </div>
@@ -154,10 +154,12 @@
           <h2>Data stored in your browser</h2>
           <div class="prose">
             <p>
-              To avoid re-fetching the same numbers on every page view, the site keeps a copy of
-              the public Roblox statistics in your browser under the local storage key
-              <code>voyage_live_stats</code>. It expires after 30 minutes, contains no personal
-              information, and never leaves your device. Clearing your site data removes it.
+              To avoid re-fetching the same data on every page view, the site keeps copies of
+              public Roblox data in your browser's local storage: the game statistics under
+              <code>voyage_live_stats</code> (used for 30 minutes), the ratings under
+              <code>voyage_live_ratings</code> (six hours) and the addresses of the game
+              pictures under <code>voyage_live_art</code> (a week). They contain no personal
+              information and never leave your device. Clearing your site data removes them.
             </p>
           </div>
         </div>
@@ -172,15 +174,17 @@
                 of that request.
               </li>
               <li>
-                <b>Roblox</b> provides the visit, favorite and concurrent player counts through
-                its public games API.
+                <b>Roblox</b> provides the visit, favorite and concurrent player counts, the
+                ratings and the game pictures through its public API. The pictures load
+                straight from its image servers on <code>rbxcdn.com</code>, so your IP address
+                is visible to Roblox as part of those requests.
               </li>
               <li>
-                <b>Proxies</b> relay that Roblox request, because the API does not allow
-                direct browser calls. The site tries <code>games.roproxy.com</code>, a mirror
-                of the Roblox API, along with <code>corsproxy.io</code>,
-                <code>api.allorigins.win</code> and <code>api.codetabs.com</code>, and uses
-                whichever answers first. These requests carry no personal data beyond what any
+                <b>Proxies</b> relay the API requests, because the API does not allow direct
+                browser calls. The site asks roproxy first (<code>games.roproxy.com</code> and
+                <code>thumbnails.roproxy.com</code>, a mirror of the Roblox API) and turns to
+                <code>api.allorigins.win</code> or <code>api.codetabs.com</code> only when
+                roproxy does not answer. These requests carry no personal data beyond what any
                 HTTP request exposes.
               </li>
               <li>

@@ -1,7 +1,7 @@
 'use strict';
 
 /* =============================================================
-   Game catalogue + live stats from the public Roblox API.
+   Game catalogue + live stats and art from the public Roblox API.
 
    To add a game, add an entry to GAMES. Every list on the site
    (the wall of art in the hero, the cards on the home page, the games
@@ -10,10 +10,15 @@
    universeId is constant per game (resolved once through
    apis.roblox.com/universes/v1/places/{placeId}/universe).
 
+   The pictures come live from Roblox: the game's icon and its main
+   thumbnail, so a new picture on Roblox reaches the site by itself.
+   image (512x512) and cover (768x432) are copies of them kept in
+   img/games, shown only when the live art cannot be had.
+
    fallback.* are the last values recorded by hand. They paint
-   immediately and stay on screen if the API is unreachable.
-   fallback.rating is always static: the public games endpoint
-   returns null for positiveRatingPercentage.
+   immediately and stay on screen if the API is unreachable. Visits,
+   favorites, players online and ratings are all replaced by live
+   values once the API answers.
 
    color is the game's own accent. It only shows behind the art
    while the image is still loading. deep is a darker shade of it,
@@ -229,39 +234,62 @@ function setHTML(host, html) {
 
 
 /* ---------- Roblox API through public proxies ----------
-   games.roblox.com sends no CORS headers, so a browser cannot call it
+   The Roblox API sends no CORS headers, so a browser cannot call it
    directly. Each entry turns the real URL into one a page may fetch.
    The first is roproxy, a mirror of the Roblox API that keeps the same
-   paths on its own host; the rest are general-purpose CORS proxies.
+   paths on its own hosts (games.roproxy.com, thumbnails.roproxy.com);
+   the other two are general-purpose CORS proxies, kept in reserve.
+   corsproxy.io was dropped in November 2026: it now wants an API key.
    Any host added or removed here also belongs in privacy.html. */
 const CORS_PROXIES = [
-  u => u.replace('//games.roblox.com/', '//games.roproxy.com/'),
-  u => `https://corsproxy.io/?url=${encodeURIComponent(u)}`,
+  u => u.replace(/\/\/(\w+)\.roblox\.com\//, '//$1.roproxy.com/'),
   u => `https://api.allorigins.win/raw?url=${encodeURIComponent(u)}`,
   u => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(u)}`
 ];
 
 const FETCH_TIMEOUT = 8000;
+const BACKUP_AFTER  = 1200;
 
-function robloxFetch(url) {
-  const attempt = (makeProxy) => {
-    const ctrl  = new AbortController();
-    const timer = setTimeout(() => ctrl.abort(), FETCH_TIMEOUT);
-    return fetch(makeProxy(url), { signal: ctrl.signal })
-      .then(r => {
-        if (!r.ok) throw new Error('HTTP ' + r.status);
-        return r.json();
+/* One Roblox API call, answered as JSON. roproxy is asked first. The
+   reserve proxies join in when it fails, or when it is still silent
+   after BACKUP_AFTER; the first good answer wins and the others are
+   called off. With { backups: false } only roproxy is asked. */
+function robloxFetch(url, { backups = true } = {}) {
+  const proxies = backups ? CORS_PROXIES : CORS_PROXIES.slice(0, 1);
+  const ctrls   = proxies.map(() => new AbortController());
+  let primaryFailed;
+  const primaryDown = new Promise(resolve => { primaryFailed = resolve; });
+
+  const attempt = (makeProxy, i) => {
+    const turn = i === 0 ? Promise.resolve()
+      : Promise.race([new Promise(r => setTimeout(r, BACKUP_AFTER)), primaryDown]);
+    return turn
+      .then(() => {
+        if (ctrls[i].signal.aborted) throw new Error('not needed');
+        const timer = setTimeout(() => ctrls[i].abort(), FETCH_TIMEOUT);
+        return fetch(makeProxy(url), { signal: ctrls[i].signal })
+          .then(r => {
+            if (!r.ok) throw new Error('HTTP ' + r.status);
+            return r.json();
+          })
+          .finally(() => clearTimeout(timer));
       })
-      .finally(() => clearTimeout(timer));
+      .catch(err => {
+        if (i === 0) primaryFailed();
+        throw err;
+      });
   };
-  // race every proxy, first success wins
-  return Promise.any(CORS_PROXIES.map(attempt))
+
+  return Promise.any(proxies.map(attempt))
+    .then(data => { ctrls.forEach(c => c.abort()); return data; })
     .catch(() => { throw new Error('all proxies failed'); });
 }
 
-async function fetchRobloxStats() {
-  const ids = GAMES.map(g => g.universeId).join(',');
-  const payload = await robloxFetch(`https://games.roblox.com/v1/games?universeIds=${ids}`);
+const UNIVERSE_IDS = GAMES.map(g => g.universeId).join(',');
+
+/* Visits, favorites and players online, every game in one call. */
+async function fetchStats() {
+  const payload = await robloxFetch(`https://games.roblox.com/v1/games?universeIds=${UNIVERSE_IDS}`);
   if (!payload || !Array.isArray(payload.data)) throw new Error('unexpected payload');
 
   const byUniverse = {};
@@ -273,40 +301,102 @@ async function fetchRobloxStats() {
       playingRaw: g.playing || 0
     };
   });
+  return byUniverse;
+}
 
+/* Ratings: the share of thumbs up, as on the game's page on Roblox.
+   roproxy turns away the endpoint that takes every game at once, so each
+   game is asked on its own (v1/games/{universeId}/votes), of roproxy
+   only. Ratings move slowly, so they are kept for RATINGS_TTL. */
+async function fetchRatings() {
+  const kept = stored(RATINGS_KEY, RATINGS_TTL);
+  if (kept) return kept;
+
+  const answers = await Promise.allSettled(GAMES.map(g =>
+    robloxFetch(`https://games.roblox.com/v1/games/${g.universeId}/votes`, { backups: false })));
+  const ratings = {};
+  answers.forEach((a, i) => {
+    const votes = a.status === 'fulfilled' ? a.value : null;
+    const total = votes ? votes.upVotes + votes.downVotes : 0;
+    if (total > 0) ratings[GAMES[i].universeId] = Math.round(100 * votes.upVotes / total) + '%';
+  });
+  if (Object.keys(ratings).length) store(RATINGS_KEY, ratings);
+  return ratings;
+}
+
+async function fetchRobloxStats() {
+  const [stats, ratings] = await Promise.all([fetchStats(), fetchRatings().catch(() => ({}))]);
   return GAMES.map(game => {
-    const live = byUniverse[game.universeId];
+    const live = stats[game.universeId];
     if (!live) return Object.assign({}, game, { live: null });
-    // rating is not exposed by this endpoint, keep the recorded value
+    // a rating Roblox did not give stays at the recorded value
     return Object.assign({}, game, {
-      live: Object.assign({}, live, { rating: game.fallback.rating })
+      live: Object.assign({}, live, { rating: ratings[game.universeId] || game.fallback.rating })
     });
   });
 }
 
-/* ---------- localStorage cache ---------- */
-const LS_KEY = 'voyage_live_stats';
-const LS_TTL = 30 * 60 * 1000;
+/* The art: each game's main thumbnail (768x432) and icon (512x512), as
+   WebP on the Roblox CDN. Only addresses on rbxcdn.com are taken from an
+   answer, since a proxy is not to be trusted with what the page loads.
+   Icons are only asked for when the wall in the hero needs them, that
+   is while there are fewer games than tiles. */
+const CDN_URL = /^https:\/\/[a-z0-9-]+\.rbxcdn\.com\//;
 
-// Only the live numbers are cached. Titles, art and colours always come
-// from GAMES above, so a stale cache can never show outdated artwork.
-function cacheRead() {
+async function fetchArt() {
+  const api = 'https://thumbnails.roblox.com/v1/games/';
+  const wantIcons = !!document.getElementById('heroWall') && GAMES.length < WALL_TILES;
+  const [covers, icons] = await Promise.allSettled([
+    robloxFetch(`${api}multiget/thumbnails?universeIds=${UNIVERSE_IDS}&countPerUniverse=1&defaults=true&size=768x432&format=Webp&isCircular=false`),
+    wantIcons
+      ? robloxFetch(`${api}icons?universeIds=${UNIVERSE_IDS}&returnPolicy=PlaceHolder&size=512x512&format=Webp&isCircular=false`)
+      : Promise.reject(new Error('not needed'))
+  ]);
+  if (covers.status === 'rejected' && icons.status === 'rejected') throw new Error('no art');
+
+  const art = {};
+  const put = (universeId, kind, thumb) => {
+    if (!thumb || thumb.state !== 'Completed' || !CDN_URL.test(thumb.imageUrl || '')) return;
+    (art[universeId] = art[universeId] || {})[kind] = thumb.imageUrl;
+  };
+  if (covers.value) (covers.value.data || []).forEach(u => put(String(u.universeId), 'cover', (u.thumbnails || [])[0]));
+  if (icons.value)  (icons.value.data || []).forEach(t => put(String(t.targetId), 'image', t));
+  return art;
+}
+
+/* ---------- localStorage cache ----------
+   Live values are kept between page views, each kind under its own key:
+   the numbers for half an hour (they paint at once on the next visit and
+   are refreshed in the background), the ratings for six hours, and the
+   addresses of the art for a week, so a returning visitor gets the
+   pictures without waiting on the API. Titles, descriptions and colours
+   always come from GAMES above. */
+const STATS_KEY   = 'voyage_live_stats',   STATS_TTL   = 30 * 60 * 1000;
+const RATINGS_KEY = 'voyage_live_ratings', RATINGS_TTL = 6 * 60 * 60 * 1000;
+const ART_KEY     = 'voyage_live_art',     ART_TTL     = 7 * 24 * 60 * 60 * 1000;
+
+function stored(key, maxAge) {
   try {
-    const raw = localStorage.getItem(LS_KEY);
-    if (!raw) return null;
-    const { ts, live } = JSON.parse(raw);
-    if (!live || typeof live !== 'object' || Date.now() - ts > LS_TTL) return null;
-    return GAMES.map(g => Object.assign({}, g, { live: live[g.universeId] || null }));
+    const { ts, data } = JSON.parse(localStorage.getItem(key)) || {};
+    return data && typeof data === 'object' && Date.now() - ts <= maxAge ? data : null;
   } catch { return null; }
 }
 
+function store(key, data) {
+  try { localStorage.setItem(key, JSON.stringify({ ts: Date.now(), data })); }
+  catch { /* private mode or quota, ignore */ }
+}
+
+function cacheRead() {
+  const live = stored(STATS_KEY, STATS_TTL);
+  return live && GAMES.map(g => Object.assign({}, g, { live: live[g.universeId] || null }));
+}
+
 function cacheWrite(games) {
-  try {
-    if (!games.some(g => g.live)) return;
-    const live = {};
-    games.forEach(g => { if (g.live) live[g.universeId] = g.live; });
-    localStorage.setItem(LS_KEY, JSON.stringify({ ts: Date.now(), live }));
-  } catch { /* private mode or quota, ignore */ }
+  if (!games.some(g => g.live)) return;
+  const live = {};
+  games.forEach(g => { if (g.live) live[g.universeId] = g.live; });
+  store(STATS_KEY, live);
 }
 
 async function loadGames() {
@@ -329,6 +419,77 @@ function loadGamesOnce() {
   if (!_gamesPromise) _gamesPromise = loadGames();
   return _gamesPromise;
 }
+
+/* =============================================================
+   The art on screen
+   ============================================================= */
+
+/* Every picture is an <img data-art="placeId:cover"> (or ":image") and
+   shows whatever artShown holds for that key. Before anything is known
+   the image stays empty and the game colour shows through. The live
+   picture goes in as soon as its address arrives. If that takes longer
+   than ART_WAIT, or the API cannot be reached, the copy in img/games goes
+   in instead, and a live picture arriving after that replaces it only
+   once it has loaded, so nothing flickers. A live picture the browser
+   cannot load (a school network that blocks Roblox, say) gives way to
+   the copy as well. */
+const ART_WAIT  = 1500;
+const BY_PLACE  = Object.fromEntries(GAMES.map(g => [g.placeId, g]));
+const liveArt   = {};          // universeId -> { cover, image }: live addresses known so far
+const artShown  = {};          // "placeId:kind" -> the address on screen
+const deadArt   = new Set();   // live addresses that would not load
+let   useCopies = false;       // whether the copies in img/games may be shown yet
+
+// What a picture should show: the live one if it works, otherwise the
+// copy once copies are allowed, otherwise nothing yet.
+function artWanted(game, kind) {
+  const live = (liveArt[game.universeId] || {})[kind];
+  if (live && !deadArt.has(live)) return live;
+  return useCopies ? game[kind] : '';
+}
+
+function artImg(game, kind, attrs) {
+  const key = game.placeId + ':' + kind;
+  const src = artShown[key];
+  return `<img ${src ? `src="${esc(src)}" ` : ''}data-art="${esc(key)}" alt="" ${attrs} />`;
+}
+
+function showArt(key, src) {
+  artShown[key] = src;
+  document.querySelectorAll(`img[data-art="${key}"]`).forEach(img => { img.src = src; });
+}
+
+// Bring every picture up to date with what is known.
+function refreshArt() {
+  GAMES.forEach(game => ['cover', 'image'].forEach(kind => {
+    const key  = game.placeId + ':' + kind;
+    const want = artWanted(game, kind);
+    if (!want || artShown[key] === want) return;
+    // nothing showing yet, or not drawn anywhere: straight in
+    if (!artShown[key] || !document.querySelector(`img[data-art="${key}"]`)) return showArt(key, want);
+    // a picture is already up: load the new one first, then swap
+    const next = new Image();
+    next.onload = () => { if (artWanted(game, kind) === want) showArt(key, want); };
+    next.src = want;
+  }));
+}
+
+// A picture that does not load: a live one gives way to the copy, and a
+// copy that fails too leaves the colour.
+document.addEventListener('error', e => {
+  const img = e.target;
+  if (!(img instanceof HTMLImageElement) || !img.dataset.art) return;
+  const game = BY_PLACE[img.dataset.art.split(':')[0]];
+  const kind = img.dataset.art.split(':')[1];
+  const src  = img.getAttribute('src');
+  if (!game || !src) return;
+  if (src !== game[kind]) {
+    deadArt.add(src);
+    showArt(img.dataset.art, game[kind]);
+  } else {
+    img.removeAttribute('src');
+  }
+}, true);
 
 /* =============================================================
    Player counts
@@ -498,22 +659,23 @@ function renderFigures(games) {
    Twelve tilted pieces of game art around the edges of the hero. Their
    places are fixed in css/style.css (.wall-tile:nth-child); this only
    deals the art into them: every cover first, most played first, then
-   the square icons. It is decoration, so it is built once and never
-   refreshed when the live numbers arrive. */
+   the square icons. It is decoration, so the tiles are dealt once and
+   never again when the live numbers arrive; their pictures follow the
+   art like every other picture (see "The art on screen"). */
 const WALL_TILES = 12;
 
 function renderWall(ranked) {
   const host = document.getElementById('heroWall');
   if (!host || host.firstElementChild || !ranked.length) return;
 
-  const art = ranked.map(g => ({ src: g.cover, color: g.color, square: false }))
-    .concat(ranked.map(g => ({ src: g.image, color: g.color, square: true })));
+  const art = ranked.map(g => ({ game: g, kind: 'cover', square: false }))
+    .concat(ranked.map(g => ({ game: g, kind: 'image', square: true })));
 
   let html = '';
   for (let i = 0; i < WALL_TILES; i++) {
     const a = art[i % art.length];
-    html += `<div class="wall-tile${a.square ? ' wall-tile--sq' : ''}" style="background-color:${esc(a.color)}">` +
-            `<img src="${esc(a.src)}" alt="" decoding="async" /></div>`;
+    html += `<div class="wall-tile${a.square ? ' wall-tile--sq' : ''}" style="background-color:${esc(a.game.color)}">` +
+            artImg(a.game, a.kind, 'decoding="async"') + '</div>';
   }
   host.innerHTML = html;
 }
@@ -551,7 +713,7 @@ function flagshipCard(game) {
   return `
     <a class="flagship" href="${esc(game.url)}" ${NEW_TAB}>
       <span class="flagship-art" style="background-color:${esc(game.color)}">
-        <img src="${esc(game.cover)}" alt="" width="768" height="432" />
+        ${artImg(game, 'cover', 'width="768" height="432"')}
       </span>
       <span class="flagship-body">
         <span class="rank"><b>${rankLabel(1)}</b> Most played</span>
@@ -568,7 +730,7 @@ function gameCard(game, rank, detailed) {
   return `
     <a class="gcard" href="${esc(game.url)}" ${NEW_TAB}>
       <span class="gcard-art" style="background-color:${esc(game.color)}">
-        <img src="${esc(game.cover)}" alt="" loading="lazy" width="768" height="432" />
+        ${artImg(game, 'cover', 'loading="lazy" width="768" height="432"')}
       </span>
       <span class="gcard-body">
         <span class="rank"><b>${rankLabel(rank)}</b> ${esc(game.genre)}</span>
@@ -705,7 +867,10 @@ function initGamesControls() {
     }
   }
 
-  // 1. recorded values first, so nothing waits on the network
+  // 1. recorded values first, so nothing waits on the network, with the
+  //    live art from the last visit if there is any
+  Object.assign(liveArt, stored(ART_KEY, ART_TTL));
+  refreshArt();
   const offline = GAMES.map(g => Object.assign({}, g, { live: null }));
   if (onGamesPage) initGamesControls();
   paint(offline, false);
@@ -714,4 +879,10 @@ function initGamesControls() {
   loadGamesOnce().then(games => {
     paint(games.some(g => g.live) ? games : offline, true);
   });
+
+  // 3. the live art, or the copies in img/games where it is late or missing
+  setTimeout(() => { useCopies = true; refreshArt(); }, ART_WAIT);
+  fetchArt()
+    .then(art => { Object.assign(liveArt, art); store(ART_KEY, liveArt); refreshArt(); })
+    .catch(() => { useCopies = true; refreshArt(); });
 })();
